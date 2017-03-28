@@ -120,8 +120,8 @@ read	{
 				printf("*** Error léxico (linea %d): constante demasiado grande. %s ***\n",yylineno,yytext);
 				nErrores++;
 			}else
-				printf("CONST: %s\n", yytext);
-			return CONST;
+				printf("ENT: %s\n", yytext);
+			return ENT;
 		}
 
 [ \t\n\r]+ 	{ /* Ignoramos */ }
