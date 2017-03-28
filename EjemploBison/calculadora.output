@@ -1,0 +1,394 @@
+Gramática
+
+    0 $accept: ini $end
+
+    1 $@1: %empty
+
+    2 ini: ini $@1 asig PYC
+    3    | %empty
+    4    | error PYC
+
+    5 asig: ID EQUAL expr
+    6     | expr
+
+    7 expr: expr MAS expr
+    8     | expr MENOS expr
+    9     | expr MULT expr
+   10     | expr DIV expr
+   11     | expr EXP expr
+   12     | PARI expr PARD
+   13     | ENT
+   14     | MENOS expr
+   15     | ID
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256) 4
+MAS (258) 7
+MENOS (259) 8 14
+MULT (260) 9
+DIV (261) 10
+PARI (262) 12
+PARD (263) 12
+PYC (264) 2 4
+EXP (265) 11
+EQUAL (266) 5
+ENT (267) 13
+ID (268) 5 15
+UMENOS (269)
+
+
+No terminales con las reglas donde aparecen
+
+$accept (15)
+    en la izquierda: 0
+ini (16)
+    en la izquierda: 2 3 4, en la derecha: 0 2
+$@1 (17)
+    en la izquierda: 1, en la derecha: 2
+asig (18)
+    en la izquierda: 5 6, en la derecha: 2
+expr (19)
+    en la izquierda: 7 8 9 10 11 12 13 14 15, en la derecha: 5 6 7
+    8 9 10 11 12 14
+
+
+Estado 0
+
+    0 $accept: . ini $end
+
+    error  desplazar e ir al estado 1
+
+    $end   reduce usando la regla 3 (ini)
+    MENOS  reduce usando la regla 3 (ini)
+    PARI   reduce usando la regla 3 (ini)
+    ENT    reduce usando la regla 3 (ini)
+    ID     reduce usando la regla 3 (ini)
+
+    ini  ir al estado 2
+
+
+Estado 1
+
+    4 ini: error . PYC
+
+    PYC  desplazar e ir al estado 3
+
+
+Estado 2
+
+    0 $accept: ini . $end
+    2 ini: ini . $@1 asig PYC
+
+    $end  desplazar e ir al estado 4
+
+    $default  reduce usando la regla 1 ($@1)
+
+    $@1  ir al estado 5
+
+
+Estado 3
+
+    4 ini: error PYC .
+
+    $default  reduce usando la regla 4 (ini)
+
+
+Estado 4
+
+    0 $accept: ini $end .
+
+    $default  aceptar
+
+
+Estado 5
+
+    2 ini: ini $@1 . asig PYC
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 9
+
+    asig  ir al estado 10
+    expr  ir al estado 11
+
+
+Estado 6
+
+   14 expr: MENOS . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 13
+
+
+Estado 7
+
+   12 expr: PARI . expr PARD
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 14
+
+
+Estado 8
+
+   13 expr: ENT .
+
+    $default  reduce usando la regla 13 (expr)
+
+
+Estado 9
+
+    5 asig: ID . EQUAL expr
+   15 expr: ID .
+
+    EQUAL  desplazar e ir al estado 15
+
+    $default  reduce usando la regla 15 (expr)
+
+
+Estado 10
+
+    2 ini: ini $@1 asig . PYC
+
+    PYC  desplazar e ir al estado 16
+
+
+Estado 11
+
+    6 asig: expr .
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+
+    MAS    desplazar e ir al estado 17
+    MENOS  desplazar e ir al estado 18
+    MULT   desplazar e ir al estado 19
+    DIV    desplazar e ir al estado 20
+    EXP    desplazar e ir al estado 21
+
+    $default  reduce usando la regla 6 (asig)
+
+
+Estado 12
+
+   15 expr: ID .
+
+    $default  reduce usando la regla 15 (expr)
+
+
+Estado 13
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+   14     | MENOS expr .
+
+    $default  reduce usando la regla 14 (expr)
+
+
+Estado 14
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+   12     | PARI expr . PARD
+
+    MAS    desplazar e ir al estado 17
+    MENOS  desplazar e ir al estado 18
+    MULT   desplazar e ir al estado 19
+    DIV    desplazar e ir al estado 20
+    PARD   desplazar e ir al estado 22
+    EXP    desplazar e ir al estado 21
+
+
+Estado 15
+
+    5 asig: ID EQUAL . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 23
+
+
+Estado 16
+
+    2 ini: ini $@1 asig PYC .
+
+    $default  reduce usando la regla 2 (ini)
+
+
+Estado 17
+
+    7 expr: expr MAS . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 24
+
+
+Estado 18
+
+    8 expr: expr MENOS . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 25
+
+
+Estado 19
+
+    9 expr: expr MULT . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 26
+
+
+Estado 20
+
+   10 expr: expr DIV . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 27
+
+
+Estado 21
+
+   11 expr: expr EXP . expr
+
+    MENOS  desplazar e ir al estado 6
+    PARI   desplazar e ir al estado 7
+    ENT    desplazar e ir al estado 8
+    ID     desplazar e ir al estado 12
+
+    expr  ir al estado 28
+
+
+Estado 22
+
+   12 expr: PARI expr PARD .
+
+    $default  reduce usando la regla 12 (expr)
+
+
+Estado 23
+
+    5 asig: ID EQUAL expr .
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+
+    MAS    desplazar e ir al estado 17
+    MENOS  desplazar e ir al estado 18
+    MULT   desplazar e ir al estado 19
+    DIV    desplazar e ir al estado 20
+    EXP    desplazar e ir al estado 21
+
+    $default  reduce usando la regla 5 (asig)
+
+
+Estado 24
+
+    7 expr: expr . MAS expr
+    7     | expr MAS expr .
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+
+    MULT  desplazar e ir al estado 19
+    DIV   desplazar e ir al estado 20
+    EXP   desplazar e ir al estado 21
+
+    $default  reduce usando la regla 7 (expr)
+
+
+Estado 25
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    8     | expr MENOS expr .
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+
+    MULT  desplazar e ir al estado 19
+    DIV   desplazar e ir al estado 20
+    EXP   desplazar e ir al estado 21
+
+    $default  reduce usando la regla 8 (expr)
+
+
+Estado 26
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+    9     | expr MULT expr .
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+
+    EXP  desplazar e ir al estado 21
+
+    $default  reduce usando la regla 9 (expr)
+
+
+Estado 27
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   10     | expr DIV expr .
+   11     | expr . EXP expr
+
+    EXP  desplazar e ir al estado 21
+
+    $default  reduce usando la regla 10 (expr)
+
+
+Estado 28
+
+    7 expr: expr . MAS expr
+    8     | expr . MENOS expr
+    9     | expr . MULT expr
+   10     | expr . DIV expr
+   11     | expr . EXP expr
+   11     | expr EXP expr .
+
+    $default  reduce usando la regla 11 (expr)

@@ -1,0 +1,23 @@
+#define FUNC 1
+#define VAR 2
+#define LET 3
+#define IF 4
+#define ELSE 5
+#define WHILE 6
+#define PRINT 7
+#define READ 8
+#define ID 9
+#define APAR 10
+#define CPAR 11
+#define PTOCOMA 12
+#define COMA 13
+#define MAS 14
+#define MENOS 15
+#define POR 16
+#define ENTRE 17
+#define IGUAL 18
+#define ALLAVE 19
+#define CLLAVE 20
+#define CONST 21
+#define CADENA 22
+
