@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "minic.h"
+#include "minic.tab.h"
 #include <math.h>
 
 int comienzo_comentario;

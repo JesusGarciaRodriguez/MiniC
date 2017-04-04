@@ -1,12 +1,14 @@
-analizador : main.c lex.yy.c minic.h
-	gcc main.c lex.yy.c -lfl -o analizador
+analizador: minic.tab.c lex.yy.c main.c lista.h lista.c
+			gcc minic.tab.c lex.yy.c main.c lista.c -lfl -lm -o minic
 
-lex.yy.c : minic.l
-	flex --yylineno minic.l
+minic.tab.c minic.tab.h: minic.y
+			bison -t -v -d minic.y
 
-clean :
-	rm -f analizador lex.yy.c
+lex.yy.c: minic.l minic.tab.h
+			flex --yylineno minic.l
 
-run : analizador test
-	./analizador test
+run:	prueba.txt minic
+		./analizador prueba.txt
 
+clean:
+		rm analizador minic.tab.* lex.yy.c

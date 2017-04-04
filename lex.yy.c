@@ -543,7 +543,7 @@ char *yytext;
 #line 1 "minic.l"
 #line 2 "minic.l"
 #include <stdio.h>
-#include "minic.h"
+#include "minic.tab.h"
 #include <math.h>
 
 int comienzo_comentario;
@@ -1017,8 +1017,8 @@ YY_RULE_SETUP
 				printf("*** Error léxico (linea %d): constante demasiado grande. %s ***\n",yylineno,yytext);
 				nErrores++;
 			}else
-				printf("CONST: %s\n", yytext);
-			return CONST;
+				printf("ENT: %s\n", yytext);
+			return ENT;
 		}
 	YY_BREAK
 case 22:
