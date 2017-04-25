@@ -67,6 +67,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "lista.h"
+//#include "codigo.h"
 extern int yylex();
 int yyerror(const char * msg);
 extern int yylineno;
@@ -74,7 +75,7 @@ lista lVar;
 int tipo;
 char bufErr[128];
 
-#line 78 "minic.tab.c" /* yacc.c:339  */
+#line 79 "minic.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -140,12 +141,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 13 "minic.y" /* yacc.c:355  */
+#line 14 "minic.y" /* yacc.c:355  */
 
 	int num;
-	char * str; 
+	char * str;
+	//ops mips; 
 
-#line 149 "minic.tab.c" /* yacc.c:355  */
+#line 151 "minic.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -176,7 +178,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 180 "minic.tab.c" /* yacc.c:358  */
+#line 182 "minic.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -478,10 +480,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    30,    30,    33,    33,    34,    34,    35,    36,    39,
-      40,    43,    50,    59,    60,    63,    73,    74,    75,    76,
-      77,    78,    79,    80,    83,    84,    87,    88,    91,   101,
-     113,   114,   115,   116,   117,   118,   119,   125
+       0,    32,    32,    35,    35,    36,    36,    37,    38,    41,
+      42,    45,    52,    61,    62,    65,    75,    76,    77,    78,
+      79,    80,    81,    82,    85,    86,    89,    90,    93,   103,
+     115,   116,   117,   118,   119,   120,   121,   127
 };
 #endif
 
@@ -1397,61 +1399,61 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 30 "minic.y" /* yacc.c:1646  */
+#line 32 "minic.y" /* yacc.c:1646  */
     { printf("program->FUNC ID(){declarations statement_list}\n");}
-#line 1403 "minic.tab.c" /* yacc.c:1646  */
+#line 1405 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 33 "minic.y" /* yacc.c:1646  */
+#line 35 "minic.y" /* yacc.c:1646  */
     {tipo=1;}
-#line 1409 "minic.tab.c" /* yacc.c:1646  */
+#line 1411 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 33 "minic.y" /* yacc.c:1646  */
+#line 35 "minic.y" /* yacc.c:1646  */
     { printf("declarations->declarations VAR identifier_list ;\n");}
-#line 1415 "minic.tab.c" /* yacc.c:1646  */
+#line 1417 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 34 "minic.y" /* yacc.c:1646  */
+#line 36 "minic.y" /* yacc.c:1646  */
     {tipo=0;}
-#line 1421 "minic.tab.c" /* yacc.c:1646  */
+#line 1423 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 34 "minic.y" /* yacc.c:1646  */
+#line 36 "minic.y" /* yacc.c:1646  */
     { printf("declarations->declarations LET identifier_list ;\n");}
-#line 1427 "minic.tab.c" /* yacc.c:1646  */
+#line 1429 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 35 "minic.y" /* yacc.c:1646  */
+#line 37 "minic.y" /* yacc.c:1646  */
     { printf("declarations->lambda\n");}
-#line 1433 "minic.tab.c" /* yacc.c:1646  */
+#line 1435 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 36 "minic.y" /* yacc.c:1646  */
+#line 38 "minic.y" /* yacc.c:1646  */
     { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1439 "minic.tab.c" /* yacc.c:1646  */
+#line 1441 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 39 "minic.y" /* yacc.c:1646  */
+#line 41 "minic.y" /* yacc.c:1646  */
     { printf("identifier_list->asig\n");}
-#line 1445 "minic.tab.c" /* yacc.c:1646  */
+#line 1447 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 40 "minic.y" /* yacc.c:1646  */
+#line 42 "minic.y" /* yacc.c:1646  */
     {printf("identifier_list->identifier_list , asig\n");}
-#line 1451 "minic.tab.c" /* yacc.c:1646  */
+#line 1453 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 43 "minic.y" /* yacc.c:1646  */
+#line 45 "minic.y" /* yacc.c:1646  */
     { 	printf("asig->ID\n"); 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))!=-1){
 							snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[0].str));
@@ -1459,11 +1461,11 @@ yyreduce:
 						}			
 						else insertarVar(&lVar,(yyvsp[0].str),tipo);
 					}
-#line 1463 "minic.tab.c" /* yacc.c:1646  */
+#line 1465 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 50 "minic.y" /* yacc.c:1646  */
+#line 52 "minic.y" /* yacc.c:1646  */
     { 	printf("asig->ID = expression\n");
 										if(consultarTipoVar(lVar,(yyvsp[-2].str))!=-1){
 											snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[-2].str));
@@ -1471,23 +1473,23 @@ yyreduce:
 										}						
 										else insertarVar(&lVar,(yyvsp[-2].str),tipo);
 									}
-#line 1475 "minic.tab.c" /* yacc.c:1646  */
+#line 1477 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 59 "minic.y" /* yacc.c:1646  */
+#line 61 "minic.y" /* yacc.c:1646  */
     { printf("statement_list->statement_list statement\n");}
-#line 1481 "minic.tab.c" /* yacc.c:1646  */
+#line 1483 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 60 "minic.y" /* yacc.c:1646  */
+#line 62 "minic.y" /* yacc.c:1646  */
     { printf("statement_list->lambda\n");}
-#line 1487 "minic.tab.c" /* yacc.c:1646  */
+#line 1489 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 63 "minic.y" /* yacc.c:1646  */
+#line 65 "minic.y" /* yacc.c:1646  */
     { printf("statement->ID = expression ;\n"); 
 												if(consultarTipoVar(lVar,(yyvsp[-3].str))==-1){
 													snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[-3].str));
@@ -1498,83 +1500,83 @@ yyreduce:
 													yyerror(bufErr);			
 												}		
 											}
-#line 1502 "minic.tab.c" /* yacc.c:1646  */
+#line 1504 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 73 "minic.y" /* yacc.c:1646  */
+#line 75 "minic.y" /* yacc.c:1646  */
     { printf("statement->{ statement_list }\n");}
-#line 1508 "minic.tab.c" /* yacc.c:1646  */
+#line 1510 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 74 "minic.y" /* yacc.c:1646  */
+#line 76 "minic.y" /* yacc.c:1646  */
     { printf("statement->IF ( expression ) statement ELSE statement\n");}
-#line 1514 "minic.tab.c" /* yacc.c:1646  */
+#line 1516 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 75 "minic.y" /* yacc.c:1646  */
+#line 77 "minic.y" /* yacc.c:1646  */
     { printf("statement->IF ( expression ) statement\n");}
-#line 1520 "minic.tab.c" /* yacc.c:1646  */
+#line 1522 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 76 "minic.y" /* yacc.c:1646  */
+#line 78 "minic.y" /* yacc.c:1646  */
     { printf("statement->WHILE ( expression ) statement\n");}
-#line 1526 "minic.tab.c" /* yacc.c:1646  */
+#line 1528 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 77 "minic.y" /* yacc.c:1646  */
+#line 79 "minic.y" /* yacc.c:1646  */
     { printf("statement->PRINT print_list ;\n");}
-#line 1532 "minic.tab.c" /* yacc.c:1646  */
+#line 1534 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 78 "minic.y" /* yacc.c:1646  */
+#line 80 "minic.y" /* yacc.c:1646  */
     { printf("statement->READ read_list ;\n");}
-#line 1538 "minic.tab.c" /* yacc.c:1646  */
+#line 1540 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 79 "minic.y" /* yacc.c:1646  */
+#line 81 "minic.y" /* yacc.c:1646  */
     { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1544 "minic.tab.c" /* yacc.c:1646  */
+#line 1546 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 80 "minic.y" /* yacc.c:1646  */
+#line 82 "minic.y" /* yacc.c:1646  */
     { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1550 "minic.tab.c" /* yacc.c:1646  */
+#line 1552 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 83 "minic.y" /* yacc.c:1646  */
+#line 85 "minic.y" /* yacc.c:1646  */
     { printf("print_list->print_item\n");}
-#line 1556 "minic.tab.c" /* yacc.c:1646  */
+#line 1558 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 84 "minic.y" /* yacc.c:1646  */
+#line 86 "minic.y" /* yacc.c:1646  */
     { printf("print_list->print_list,print_item\n");}
-#line 1562 "minic.tab.c" /* yacc.c:1646  */
+#line 1564 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 87 "minic.y" /* yacc.c:1646  */
+#line 89 "minic.y" /* yacc.c:1646  */
     { printf("print_item->expression\n");}
-#line 1568 "minic.tab.c" /* yacc.c:1646  */
+#line 1570 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 88 "minic.y" /* yacc.c:1646  */
+#line 90 "minic.y" /* yacc.c:1646  */
     { printf("print_item->CADENA\n");}
-#line 1574 "minic.tab.c" /* yacc.c:1646  */
+#line 1576 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 91 "minic.y" /* yacc.c:1646  */
+#line 93 "minic.y" /* yacc.c:1646  */
     { 	printf("read_list->ID\n");
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
@@ -1585,11 +1587,11 @@ yyreduce:
 							yyerror(bufErr);			
 						}				
 					}
-#line 1589 "minic.tab.c" /* yacc.c:1646  */
+#line 1591 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 101 "minic.y" /* yacc.c:1646  */
+#line 103 "minic.y" /* yacc.c:1646  */
     {	printf("read_list->read_list , ID\n");
 										if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 											snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
@@ -1600,64 +1602,64 @@ yyreduce:
 											yyerror(bufErr);			
 										}					
 									}
-#line 1604 "minic.tab.c" /* yacc.c:1646  */
+#line 1606 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 113 "minic.y" /* yacc.c:1646  */
+#line 115 "minic.y" /* yacc.c:1646  */
     { printf("expression->expression + expression\n");}
-#line 1610 "minic.tab.c" /* yacc.c:1646  */
+#line 1612 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 114 "minic.y" /* yacc.c:1646  */
+#line 116 "minic.y" /* yacc.c:1646  */
     { printf("expression->expression - expression\n");}
-#line 1616 "minic.tab.c" /* yacc.c:1646  */
+#line 1618 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 115 "minic.y" /* yacc.c:1646  */
+#line 117 "minic.y" /* yacc.c:1646  */
     { printf("expression->expression * expression\n");}
-#line 1622 "minic.tab.c" /* yacc.c:1646  */
+#line 1624 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 116 "minic.y" /* yacc.c:1646  */
+#line 118 "minic.y" /* yacc.c:1646  */
     { printf("expression->expression / expression\n");}
-#line 1628 "minic.tab.c" /* yacc.c:1646  */
+#line 1630 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 117 "minic.y" /* yacc.c:1646  */
+#line 119 "minic.y" /* yacc.c:1646  */
     { printf("expression->-expression\n");}
-#line 1634 "minic.tab.c" /* yacc.c:1646  */
+#line 1636 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 118 "minic.y" /* yacc.c:1646  */
+#line 120 "minic.y" /* yacc.c:1646  */
     { printf("expression->( expression )\n");}
-#line 1640 "minic.tab.c" /* yacc.c:1646  */
+#line 1642 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 119 "minic.y" /* yacc.c:1646  */
+#line 121 "minic.y" /* yacc.c:1646  */
     { printf("expression->ID\n");
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
 							yyerror(bufErr);	
 						}
 					}
-#line 1651 "minic.tab.c" /* yacc.c:1646  */
+#line 1653 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 125 "minic.y" /* yacc.c:1646  */
+#line 127 "minic.y" /* yacc.c:1646  */
     { printf("expression->ENT\n");}
-#line 1657 "minic.tab.c" /* yacc.c:1646  */
+#line 1659 "minic.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1661 "minic.tab.c" /* yacc.c:1646  */
+#line 1663 "minic.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1892,7 +1894,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 127 "minic.y" /* yacc.c:1906  */
+#line 129 "minic.y" /* yacc.c:1906  */
 
 /* Rutinas C */
 int yyerror(const char * msg){

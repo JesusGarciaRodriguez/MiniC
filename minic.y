@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "lista.h"
+//#include "codigo.h"
 extern int yylex();
 int yyerror(const char * msg);
 extern int yylineno;
@@ -12,13 +13,14 @@ char bufErr[128];
 
 %union {
 	int num;
-	char * str; 
+	char * str;
+	//ops mips; 
 }
 
 %token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE CADENA
 %token<num> ENT
 %token<str> ID
-%type<num> expression
+//%type<mips> expression 
 
 // Precedencia y asociatividad
 %left MAS MENOS //MAS mENOS igual precendencia, asoc por la izquierda
@@ -66,7 +68,7 @@ statement:		ID IGUAL expression PTOCOMA { printf("statement->ID = expression ;\n
 													yyerror(bufErr);			
 												}	
 												else if(consultarTipoVar(lVar,$1)==0){
-													snprintf(bufErr,128,"La variable %s se declaró como constantes",$1);
+													snprintf(bufErr,128,"La variable %s se declaró como constante",$1);
 													yyerror(bufErr);			
 												}		
 											}
@@ -94,7 +96,7 @@ read_list:		ID { 	printf("read_list->ID\n");
 							yyerror(bufErr);			
 						}	
 						else if(consultarTipoVar(lVar,$1)==0){
-							snprintf(bufErr,128,"La variable %s se declaró como constantes",$1);
+							snprintf(bufErr,128,"La variable %s se declaró como constante",$1);
 							yyerror(bufErr);			
 						}				
 					}
@@ -104,7 +106,7 @@ read_list:		ID { 	printf("read_list->ID\n");
 											yyerror(bufErr);			
 										}	
 										else if(consultarTipoVar(lVar,$3)==0){
-											snprintf(bufErr,128,"La variable %s se declaró como constantes",$3);
+											snprintf(bufErr,128,"La variable %s se declaró como constante",$3);
 											yyerror(bufErr);			
 										}					
 									}
@@ -115,14 +117,14 @@ expression:		expression MAS expression { printf("expression->expression + expres
 			|	expression POR expression { printf("expression->expression * expression\n");}
 			|	expression ENTRE expression { printf("expression->expression / expression\n");}
 			|	MENOS expression %prec UMENOS{ printf("expression->-expression\n");}
-			|	APAR expression CPAR { printf("expression->( expression )\n");}
+			|	APAR expression CPAR { printf("expression->( expression )\n");}//$$=$2;
 			|	ID	{ printf("expression->ID\n");
 						if(consultarTipoVar(lVar,$1)==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);
 							yyerror(bufErr);	
 						}
 					}
-			|	ENT { printf("expression->ENT\n");}
+			|	ENT { printf("expression->ENT\n");} //op* aux=crearOp("li",obtenerReg(),concatStr("_",$1),NULL); $$.prim=$$.ult=aux; 
 			;
 %%
 /* Rutinas C */

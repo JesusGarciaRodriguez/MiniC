@@ -1,0 +1,4 @@
+func main(){
+	var a=2,b;
+	b=3*a;
+}

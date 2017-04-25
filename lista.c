@@ -1,6 +1,7 @@
 #include "lista.h"
 #include <stdlib.h>
 #include <string.h>
+#include<stdio.h>
 
 struct listaRep {
 	char * nombre;

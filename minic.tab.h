@@ -76,12 +76,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 13 "minic.y" /* yacc.c:1909  */
+#line 14 "minic.y" /* yacc.c:1909  */
 
 	int num;
-	char * str; 
+	char * str;
+	//ops mips; 
 
-#line 85 "minic.tab.h" /* yacc.c:1909  */
+#line 86 "minic.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
