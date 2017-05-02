@@ -9,18 +9,17 @@ extern int yylineno;
 lista lVar;
 int tipo;
 char bufErr[128];
+int num_errores=0;
 %}
 
 %union {
-	int num;
 	char * str;
 	//ops mips; 
 }
 
 %token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE CADENA
-%token<num> ENT
-%token<str> ID
-//%type<mips> expression 
+%token<str> ID NUM
+//%type<mips> expression statement statement_list
 
 // Precedencia y asociatividad
 %left MAS MENOS //MAS mENOS igual precendencia, asoc por la izquierda
@@ -29,10 +28,10 @@ char bufErr[128];
 
 %%
 
-program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE { printf("program->FUNC ID(){declarations statement_list}\n");}
+program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE { printf("program->FUNC ID(){declarations statement_list}\n");} //if(num_Errores==0)// .data imprimirStrings  imprimirIds  //main imprimirCodigo(&$6); imprimirCodigo(&$7); 
 			;
 
-declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA { printf("declarations->declarations VAR identifier_list ;\n");}
+declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA { printf("declarations->declarations VAR identifier_list ;\n");} 
 			|	declarations LET {tipo=0;} identifier_list PTOCOMA { printf("declarations->declarations LET identifier_list ;\n");}
 			|	/*Lambda*/ { printf("declarations->lambda\n");}
 			| 	error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);}
@@ -49,7 +48,7 @@ asig:			ID { 	printf("asig->ID\n");
 						}			
 						else insertarVar(&lVar,$1,tipo);
 					}
-			| 	ID IGUAL expression { 	printf("asig->ID = expression\n");
+			| 	ID IGUAL expression { 	printf("asig->ID = expression\n");				//Bloque de código 
 										if(consultarTipoVar(lVar,$1)!=-1){
 											snprintf(bufErr,128,"La variable %s ya ha sido declarada",$1);
 											yyerror(bufErr);			
@@ -59,10 +58,10 @@ asig:			ID { 	printf("asig->ID\n");
 			;
 
 statement_list:	statement_list statement { printf("statement_list->statement_list statement\n");}
-			|	/*lambda*/{ printf("statement_list->lambda\n");}
+			|	/*lambda*/{ printf("statement_list->lambda\n");}									//SS.prim=NULL; SS.ult=NULL; Por culpa de esto hay que comprobar todos los ult y prim
 			;
 
-statement:		ID IGUAL expression PTOCOMA { printf("statement->ID = expression ;\n"); 
+statement:		ID IGUAL expression PTOCOMA { printf("statement->ID = expression ;\n"); 				//if(!num_errores){ $$.prim=$3.prim; $$.ult=crearOp("sw",$3.ult->res,concatStr("_",$1),NULL); $3.ult->sig=$$.ult; liberarReg($3.ult->res);} Lo del if no ha habido errores siempre antes de generar codigo.
 												if(consultarTipoVar(lVar,$1)==-1){
 													snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);
 													yyerror(bufErr);			
@@ -72,13 +71,23 @@ statement:		ID IGUAL expression PTOCOMA { printf("statement->ID = expression ;\n
 													yyerror(bufErr);			
 												}		
 											}
-			|	ALLAVE statement_list CLLAVE { printf("statement->{ statement_list }\n");}
+			|	ALLAVE statement_list CLLAVE { printf("statement->{ statement_list }\n");}		//$$=$2
 			| 	IF APAR expression CPAR statement ELSE statement { printf("statement->IF ( expression ) statement ELSE statement\n");}
-			| 	IF APAR expression CPAR statement { printf("statement->IF ( expression ) statement\n");}
+			| 	IF APAR expression CPAR statement { printf("statement->IF ( expression ) statement\n");} 
+/*
+	$$.prim=$3.prim;
+	char* etiqueta=nuevaEtiqueta();
+	$3.ult->sig=crearOP("beqz",$3.ult->res,etiqueta,NULL);
+	$3.ult->sig->sig=$5.prim;
+	$5.ult->sig=crearOp("etiq",etiqueta,NULL,NULL); //Para crear la etiqueta inventar una operación |etiq |$li |NULL |NULL|.
+	$$.ult=$5.ult->sig;
+	liberarReg($3.ult->res);		
+*/
 			|	WHILE APAR expression CPAR statement { printf("statement->WHILE ( expression ) statement\n");}
+			//DO WHILE PARECE QUE FALTA
 			|	PRINT print_list PTOCOMA { printf("statement->PRINT print_list ;\n");}
 			|	READ read_list PTOCOMA { printf("statement->READ read_list ;\n");}
-			| 	error CLLAVE { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);}
+			| 	error CLLAVE { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);} //Sumar error (y en toos
 			| 	error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);}
 			;
 			
@@ -86,13 +95,13 @@ print_list:		print_item { printf("print_list->print_item\n");}
 			|	print_list COMA print_item { printf("print_list->print_list,print_item\n");}
 			;
 
-print_item:		expression { printf("print_item->expression\n");}
-			|	CADENA { printf("print_item->CADENA\n");}
+print_item:		expression { printf("print_item->expression\n");}//mv $a0, $res
+			|	CADENA { printf("print_item->CADENA\n");}//Añadirlo a la lista de string junto con su etiqueta (por ejemplo dejar etiquetas ahí
 			;
 
 read_list:		ID { 	printf("read_list->ID\n");
 						if(consultarTipoVar(lVar,$1)==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);			//Llamada al sistema 5
 							yyerror(bufErr);			
 						}	
 						else if(consultarTipoVar(lVar,$1)==0){
@@ -120,11 +129,11 @@ expression:		expression MAS expression { printf("expression->expression + expres
 			|	APAR expression CPAR { printf("expression->( expression )\n");}//$$=$2;
 			|	ID	{ printf("expression->ID\n");
 						if(consultarTipoVar(lVar,$1)==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1); //$$.prim=crearOp("lw",obtenerReg(),concatStr("_",$1),NULL); $$.ult=$$.prim; 
 							yyerror(bufErr);	
 						}
 					}
-			|	ENT { printf("expression->ENT\n");} //op* aux=crearOp("li",obtenerReg(),concatStr("_",$1),NULL); $$.prim=$$.ult=aux; 
+			|	ENT { printf("expression->ENT\n");} //$$.prim=crearOp("li",obtenerReg(),concatStr("#",$1),NULL); $$.ult=$$.prim; 
 			;
 %%
 /* Rutinas C */

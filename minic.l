@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+// Importante orden así #include "codigo.h"
 #include "minic.tab.h"
 #include <math.h>
 
