@@ -65,9 +65,10 @@ extern int yydebug;
     ALLAVE = 275,
     CLLAVE = 276,
     CADENA = 277,
-    ENT = 278,
+    DO = 278,
     ID = 279,
-    UMENOS = 280
+    ENT = 280,
+    UMENOS = 281
   };
 #endif
 
@@ -76,11 +77,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 14 "minic.y" /* yacc.c:1909  */
+#line 21 "minic.y" /* yacc.c:1909  */
 
-	int num;
 	char * str;
-	//ops mips; 
+	ops mips; 
 
 #line 86 "minic.tab.h" /* yacc.c:1909  */
 };

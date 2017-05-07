@@ -1,5 +1,5 @@
-analizador: minic.tab.c lex.yy.c main.c lista.h lista.c
-			gcc minic.tab.c lex.yy.c main.c lista.c -lfl -lm -o analizador
+analizador: minic.tab.c lex.yy.c main.c listaVar.h listaVar.c codigo.h codigo.c
+			gcc minic.tab.c lex.yy.c main.c listaVar.c codigo.c -lfl -lm -o analizador
 
 minic.tab.c minic.tab.h: minic.y
 			bison -t -v -d minic.y

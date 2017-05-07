@@ -1,13 +1,12 @@
 #include "minic.h"
-#include "lista.h"
-//#include "codigo.h"
+#include "listaVar.h"
 #include<stdio.h>
 #include<stdlib.h>
 
 extern FILE* yyin;
 extern int yyparse();
 extern int yydebug;
-extern lista lVar;
+extern listaVar lVar;
 
 int main(int argc, char** argv){
 
@@ -22,8 +21,8 @@ int main(int argc, char** argv){
         exit(2);
     }
 	yydebug=0;
-	lVar=crearLista();
+	lVar=crearListaVar();
     yyparse();
-	borrarLista(lVar);
+	borrarListaVar(lVar);
     fclose(yyin);
 }

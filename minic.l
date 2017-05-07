@@ -1,6 +1,6 @@
 %{
+#include "codigo.h"
 #include <stdio.h>
-// Importante orden así #include "codigo.h"
 #include "minic.tab.h"
 #include <math.h>
 
@@ -51,6 +51,8 @@ print	{
 read	{
 			//printf("READ\n");
 			return READ;		
+	}
+do	{	return DO;
 	}
 ";"	{
 			//printf("PTOCOMA\n");

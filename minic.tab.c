@@ -64,18 +64,25 @@
 /* Copy the first part of user declarations.  */
 #line 1 "minic.y" /* yacc.c:339  */
 
-#include <stdio.h>
-#include <math.h>
-#include "lista.h"
-//#include "codigo.h"
+#include "codigo.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include "listaVar.h"
+//#include "listaStr.h"
+#define TAM_ETIQ 10
+
 extern int yylex();
 int yyerror(const char * msg);
 extern int yylineno;
-lista lVar;
+char * nuevaEtiqueta();
+listaVar lVar;
 int tipo;
 char bufErr[128];
+int num_errores=0;
+int num_etiq=0;
 
-#line 79 "minic.tab.c" /* yacc.c:339  */
+#line 86 "minic.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -130,9 +137,10 @@ extern int yydebug;
     ALLAVE = 275,
     CLLAVE = 276,
     CADENA = 277,
-    ENT = 278,
+    DO = 278,
     ID = 279,
-    UMENOS = 280
+    ENT = 280,
+    UMENOS = 281
   };
 #endif
 
@@ -141,13 +149,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 14 "minic.y" /* yacc.c:355  */
+#line 21 "minic.y" /* yacc.c:355  */
 
-	int num;
 	char * str;
-	//ops mips; 
+	ops mips; 
 
-#line 151 "minic.tab.c" /* yacc.c:355  */
+#line 158 "minic.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -178,7 +185,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 182 "minic.tab.c" /* yacc.c:358  */
+#line 189 "minic.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -425,18 +432,18 @@ union yyalloc
 #define YYLAST   112
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  26
+#define YYNTOKENS  27
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  13
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  37
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  79
+#define YYNSTATES  83
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   280
+#define YYMAXUTOK   281
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -473,17 +480,17 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25
+      25,    26
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    32,    32,    35,    35,    36,    36,    37,    38,    41,
-      42,    45,    52,    61,    62,    65,    75,    76,    77,    78,
-      79,    80,    81,    82,    85,    86,    89,    90,    93,   103,
-     115,   116,   117,   118,   119,   120,   121,   127
+       0,    37,    37,    40,    40,    41,    41,    42,    46,    47,
+      50,    58,    68,    69,    72,    90,    91,   110,   125,   144,
+     158,   159,   160,   161,   164,   165,   168,   169,   172,   184,
+     198,   208,   218,   228,   238,   246,   247,   258
 };
 #endif
 
@@ -494,10 +501,10 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "FUNC", "VAR", "LET", "IF", "ELSE",
   "WHILE", "PRINT", "READ", "APAR", "CPAR", "PTOCOMA", "COMA", "MAS",
-  "MENOS", "POR", "ENTRE", "IGUAL", "ALLAVE", "CLLAVE", "CADENA", "ENT",
-  "ID", "UMENOS", "$accept", "program", "declarations", "$@1", "$@2",
-  "identifier_list", "asig", "statement_list", "statement", "print_list",
-  "print_item", "read_list", "expression", YY_NULLPTR
+  "MENOS", "POR", "ENTRE", "IGUAL", "ALLAVE", "CLLAVE", "CADENA", "DO",
+  "ID", "ENT", "UMENOS", "$accept", "program", "declarations", "$@1",
+  "$@2", "identifier_list", "asig", "statement_list", "statement",
+  "print_list", "print_item", "read_list", "expression", YY_NULLPTR
 };
 #endif
 
@@ -508,16 +515,16 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280
+     275,   276,   277,   278,   279,   280,   281
 };
 # endif
 
-#define YYPACT_NINF -60
+#define YYPACT_NINF -29
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-60)))
+  (!!((Yystate) == (-29)))
 
-#define YYTABLE_NINF -8
+#define YYTABLE_NINF -1
 
 #define yytable_value_is_error(Yytable_value) \
   0
@@ -526,14 +533,15 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       1,    -1,    47,    33,   -60,    52,    79,    11,    54,    38,
-     -60,   -60,   -60,    28,    77,    77,     9,    89,    91,    17,
-      80,   -60,   -60,    86,   -60,    87,    67,   -60,    70,   -60,
-     -60,    34,    34,    34,    34,   -60,   -60,   -60,    82,   -60,
-      76,   -60,    84,    45,    34,    34,   -60,    77,   -60,    -7,
-      44,    61,   -60,   -60,    17,    34,    34,    34,    34,   -60,
-      83,   -60,    72,    76,   -60,    62,    62,   -60,   -60,    57,
-      57,   -60,   -60,   -60,   -60,    96,   -60,    62,   -60
+      34,    -2,    43,    37,   -29,    40,    51,   -29,    14,   -29,
+     -29,     0,    44,    44,    -6,    61,    62,    45,    60,   -29,
+     -29,    54,    56,   -29,    66,    12,   -29,    19,   -29,   -29,
+      33,    33,    33,    33,   -29,   -29,   -29,    21,   -29,    -4,
+     -29,    28,    30,    83,    33,    33,   -29,    44,   -29,    64,
+      71,    78,   -29,   -29,    45,    33,    33,    33,    33,   -29,
+      68,   -29,    87,    91,    -4,   -29,    54,    54,   -29,   -29,
+      48,    48,   -29,   -29,   -29,    33,   -29,    92,   -29,    85,
+      54,   -29,   -29
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -541,93 +549,95 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     1,     0,     0,     0,     0,    14,
-       8,     3,     5,     0,     0,     0,     0,     0,     0,     0,
-       0,    14,     2,     0,    13,    11,     0,     9,     0,    23,
-      22,     0,     0,     0,     0,    27,    37,    36,     0,    24,
-      26,    28,     0,     0,     0,     0,     4,     0,     6,     0,
+       0,     0,     0,     0,     1,     0,     0,     7,    13,     3,
+       5,     0,     0,     0,     0,     0,     0,     0,     0,    13,
+       2,     0,     0,    12,    10,     0,     8,     0,    23,    22,
+       0,     0,     0,     0,    27,    36,    37,     0,    24,    26,
+      28,     0,     0,     0,     0,     0,     4,     0,     6,     0,
        0,     0,    34,    20,     0,     0,     0,     0,     0,    21,
-       0,    16,     0,    12,    10,     0,     0,    35,    25,    30,
-      31,    32,    33,    29,    15,    18,    19,     0,    17
+       0,    15,     0,     0,    11,     9,     0,     0,    35,    25,
+      30,    31,    32,    33,    29,     0,    14,    17,    18,     0,
+       0,    19,    16
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -60,   -60,   -60,   -60,   -60,    93,    63,    88,   -59,   -60,
-      58,   -60,   -31
+     -29,   -29,   -29,   -29,   -29,    97,    58,    93,   -21,   -29,
+      57,   -29,   -28
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     9,    14,    15,    26,    27,    13,    24,    38,
-      39,    42,    40
+      -1,     2,     8,    12,    13,    25,    26,    11,    23,    37,
+      38,    41,    39
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
      positive, shift that token.  If negative, reduce the rule whose
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int8 yytable[] =
+static const yytype_uint8 yytable[] =
 {
-      49,    50,    51,    52,     1,    65,    75,    76,    55,    56,
-      57,    58,     8,    62,    63,    -7,    -7,    -7,    78,    -7,
-      -7,    -7,    29,     3,    69,    70,    71,    72,    33,    16,
-      30,    -7,    -7,    34,    17,    -7,    18,    19,    20,    35,
-      36,    37,    11,    12,     5,    33,    16,     4,    21,    22,
-      34,    17,    23,    18,    19,    20,    66,    36,    37,    55,
-      56,    57,    58,    16,     6,    21,    61,    10,    17,    23,
-      18,    19,    20,    67,    57,    58,    55,    56,    57,    58,
-      46,    47,    21,    48,    47,    74,    23,    55,    56,    57,
-      58,    55,    56,    57,    58,    53,    54,    59,    60,     7,
-      31,    25,    32,    77,    41,    44,    45,    73,    28,    43,
-      64,     0,    68
+      43,    14,    49,    50,    51,    52,    15,    28,    16,    17,
+      18,    55,    56,    57,    58,    29,    63,    64,     9,    10,
+      19,    20,     3,    21,    22,    46,    47,    70,    71,    72,
+      73,    14,    48,    47,    53,    54,    15,     1,    16,    17,
+      18,    59,    60,     4,    32,    77,    78,    79,     5,    33,
+      19,    61,     6,    21,    22,    14,    32,    35,    36,    82,
+      15,    33,    16,    17,    18,    57,    58,    34,    24,    35,
+      36,     7,    30,    31,    19,    44,    66,    21,    22,    55,
+      56,    57,    58,    67,    40,    45,    55,    56,    57,    58,
+      68,    62,    74,    55,    56,    57,    58,    81,    75,    80,
+      55,    56,    57,    58,    76,    65,    55,    56,    57,    58,
+      27,    69,    42
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-      31,    32,    33,    34,     3,    12,    65,    66,    15,    16,
-      17,    18,     1,    44,    45,     4,     5,     6,    77,     8,
-       9,    10,    13,    24,    55,    56,    57,    58,    11,     1,
-      21,    20,    21,    16,     6,    24,     8,     9,    10,    22,
-      23,    24,     4,     5,    11,    11,     1,     0,    20,    21,
-      16,     6,    24,     8,     9,    10,    12,    23,    24,    15,
-      16,    17,    18,     1,    12,    20,    21,    13,     6,    24,
-       8,     9,    10,    12,    17,    18,    15,    16,    17,    18,
-      13,    14,    20,    13,    14,    13,    24,    15,    16,    17,
-      18,    15,    16,    17,    18,    13,    14,    13,    14,    20,
-      11,    24,    11,     7,    24,    19,    19,    24,    15,    21,
-      47,    -1,    54
+      21,     1,    30,    31,    32,    33,     6,    13,     8,     9,
+      10,    15,    16,    17,    18,    21,    44,    45,     4,     5,
+      20,    21,    24,    23,    24,    13,    14,    55,    56,    57,
+      58,     1,    13,    14,    13,    14,     6,     3,     8,     9,
+      10,    13,    14,     0,    11,    66,    67,    75,    11,    16,
+      20,    21,    12,    23,    24,     1,    11,    24,    25,    80,
+       6,    16,     8,     9,    10,    17,    18,    22,    24,    24,
+      25,    20,    11,    11,    20,    19,    12,    23,    24,    15,
+      16,    17,    18,    12,    24,    19,    15,    16,    17,    18,
+      12,     8,    24,    15,    16,    17,    18,    12,    11,     7,
+      15,    16,    17,    18,    13,    47,    15,    16,    17,    18,
+      13,    54,    19
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,    27,    24,     0,    11,    12,    20,     1,    28,
-      13,     4,     5,    33,    29,    30,     1,     6,     8,     9,
-      10,    20,    21,    24,    34,    24,    31,    32,    31,    13,
-      21,    11,    11,    11,    16,    22,    23,    24,    35,    36,
-      38,    24,    37,    33,    19,    19,    13,    14,    13,    38,
-      38,    38,    38,    13,    14,    15,    16,    17,    18,    13,
-      14,    21,    38,    38,    32,    12,    12,    12,    36,    38,
-      38,    38,    38,    24,    13,    34,    34,     7,    34
+       0,     3,    28,    24,     0,    11,    12,    20,    29,     4,
+       5,    34,    30,    31,     1,     6,     8,     9,    10,    20,
+      21,    23,    24,    35,    24,    32,    33,    32,    13,    21,
+      11,    11,    11,    16,    22,    24,    25,    36,    37,    39,
+      24,    38,    34,    35,    19,    19,    13,    14,    13,    39,
+      39,    39,    39,    13,    14,    15,    16,    17,    18,    13,
+      14,    21,     8,    39,    39,    33,    12,    12,    12,    37,
+      39,    39,    39,    39,    24,    11,    13,    35,    35,    39,
+       7,    12,    35
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    26,    27,    29,    28,    30,    28,    28,    28,    31,
-      31,    32,    32,    33,    33,    34,    34,    34,    34,    34,
-      34,    34,    34,    34,    35,    35,    36,    36,    37,    37,
-      38,    38,    38,    38,    38,    38,    38,    38
+       0,    27,    28,    30,    29,    31,    29,    29,    32,    32,
+      33,    33,    34,    34,    35,    35,    35,    35,    35,    35,
+      35,    35,    35,    35,    36,    36,    37,    37,    38,    38,
+      39,    39,    39,    39,    39,    39,    39,    39
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     8,     0,     5,     0,     5,     0,     2,     1,
-       3,     1,     3,     2,     0,     4,     3,     7,     5,     5,
+       0,     2,     8,     0,     5,     0,     5,     0,     1,     3,
+       1,     3,     2,     0,     4,     3,     7,     5,     5,     6,
        3,     3,     2,     2,     1,     3,     1,     1,     1,     3,
        3,     3,     3,     3,     2,     3,     1,     1
 };
@@ -1399,267 +1409,396 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 32 "minic.y" /* yacc.c:1646  */
-    { printf("program->FUNC ID(){declarations statement_list}\n");}
-#line 1405 "minic.tab.c" /* yacc.c:1646  */
+#line 37 "minic.y" /* yacc.c:1646  */
+    { printf("program->FUNC ID(){declarations statement_list}\n"); 	imprimirListaVar(lVar);}
+#line 1415 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 35 "minic.y" /* yacc.c:1646  */
+#line 40 "minic.y" /* yacc.c:1646  */
     {tipo=1;}
-#line 1411 "minic.tab.c" /* yacc.c:1646  */
+#line 1421 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 35 "minic.y" /* yacc.c:1646  */
-    { printf("declarations->declarations VAR identifier_list ;\n");}
-#line 1417 "minic.tab.c" /* yacc.c:1646  */
+#line 40 "minic.y" /* yacc.c:1646  */
+    { fprintf(stderr,"declarations->declarations VAR identifier_list ;\n");}
+#line 1427 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 36 "minic.y" /* yacc.c:1646  */
+#line 41 "minic.y" /* yacc.c:1646  */
     {tipo=0;}
-#line 1423 "minic.tab.c" /* yacc.c:1646  */
+#line 1433 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 36 "minic.y" /* yacc.c:1646  */
+#line 41 "minic.y" /* yacc.c:1646  */
     { printf("declarations->declarations LET identifier_list ;\n");}
-#line 1429 "minic.tab.c" /* yacc.c:1646  */
+#line 1439 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 37 "minic.y" /* yacc.c:1646  */
+#line 42 "minic.y" /* yacc.c:1646  */
     { printf("declarations->lambda\n");}
-#line 1435 "minic.tab.c" /* yacc.c:1646  */
+#line 1445 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 38 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1441 "minic.tab.c" /* yacc.c:1646  */
+#line 46 "minic.y" /* yacc.c:1646  */
+    { printf("identifier_list->asig\n");}
+#line 1451 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 41 "minic.y" /* yacc.c:1646  */
-    { printf("identifier_list->asig\n");}
-#line 1447 "minic.tab.c" /* yacc.c:1646  */
+#line 47 "minic.y" /* yacc.c:1646  */
+    {printf("identifier_list->identifier_list , asig\n");}
+#line 1457 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 42 "minic.y" /* yacc.c:1646  */
-    {printf("identifier_list->identifier_list , asig\n");}
-#line 1453 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 45 "minic.y" /* yacc.c:1646  */
+#line 50 "minic.y" /* yacc.c:1646  */
     { 	printf("asig->ID\n"); 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))!=-1){
 							snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[0].str));
 							yyerror(bufErr);			
+							num_errores++;
 						}			
 						else insertarVar(&lVar,(yyvsp[0].str),tipo);
 					}
-#line 1465 "minic.tab.c" /* yacc.c:1646  */
+#line 1470 "minic.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 52 "minic.y" /* yacc.c:1646  */
-    { 	printf("asig->ID = expression\n");
+  case 11:
+#line 58 "minic.y" /* yacc.c:1646  */
+    { 	printf("asig->ID = expression\n");				//Bloque de código 
 										if(consultarTipoVar(lVar,(yyvsp[-2].str))!=-1){
 											snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[-2].str));
-											yyerror(bufErr);			
+											yyerror(bufErr);	
+											num_errores++;		
 										}						
 										else insertarVar(&lVar,(yyvsp[-2].str),tipo);
 									}
-#line 1477 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 61 "minic.y" /* yacc.c:1646  */
-    { printf("statement_list->statement_list statement\n");}
 #line 1483 "minic.tab.c" /* yacc.c:1646  */
     break;
 
-  case 14:
-#line 62 "minic.y" /* yacc.c:1646  */
-    { printf("statement_list->lambda\n");}
+  case 12:
+#line 68 "minic.y" /* yacc.c:1646  */
+    { printf("statement_list->statement_list statement\n");}
 #line 1489 "minic.tab.c" /* yacc.c:1646  */
     break;
 
-  case 15:
-#line 65 "minic.y" /* yacc.c:1646  */
-    { printf("statement->ID = expression ;\n"); 
+  case 13:
+#line 69 "minic.y" /* yacc.c:1646  */
+    { (yyval.mips).prim=NULL; (yyval.mips).ult==NULL;}
+#line 1495 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 72 "minic.y" /* yacc.c:1646  */
+    { 
 												if(consultarTipoVar(lVar,(yyvsp[-3].str))==-1){
 													snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[-3].str));
-													yyerror(bufErr);			
+													yyerror(bufErr);
+													num_errores++;			
 												}	
 												else if(consultarTipoVar(lVar,(yyvsp[-3].str))==0){
-													snprintf(bufErr,128,"La variable %s se declaró como constantes",(yyvsp[-3].str));
-													yyerror(bufErr);			
-												}		
+													snprintf(bufErr,128,"La variable %s se declaró como constante",(yyvsp[-3].str));
+													yyerror(bufErr);
+													num_errores++;			
+												}	
+												if(num_errores==0){ 
+													(yyval.mips).prim=(yyvsp[-1].mips).prim; 
+													(yyval.mips).ult=crearOp("sw",(yyvsp[-1].mips).ult->res,concatStr("_",(yyvsp[-3].str)),NULL); 
+													(yyvsp[-1].mips).ult->sig=(yyval.mips).ult; 
+													liberarReg((yyvsp[-1].mips).ult->res);
+												}	
 											}
-#line 1504 "minic.tab.c" /* yacc.c:1646  */
+#line 1518 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 90 "minic.y" /* yacc.c:1646  */
+    { (yyval.mips)=(yyvsp[-1].mips);}
+#line 1524 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 75 "minic.y" /* yacc.c:1646  */
-    { printf("statement->{ statement_list }\n");}
-#line 1510 "minic.tab.c" /* yacc.c:1646  */
+#line 91 "minic.y" /* yacc.c:1646  */
+    { 
+						 												if(num_errores==0){
+																			char* etiquetaIf=nuevaEtiqueta();
+																			char* etiquetaElse=nuevaEtiqueta();
+																			ops aux1;
+																			aux1.prim=crearOp("beqz",(yyvsp[-4].mips).ult->res,etiquetaElse,NULL);
+																			aux1.ult=aux1.prim;
+																			ops aux2;
+																			aux2.prim=crearOp("b",etiquetaIf,NULL,NULL);
+																			aux2.ult=crearOp("etiq",(yyvsp[-2].mips).ult->res,etiquetaElse,NULL);
+																			aux2.prim->sig=aux2.ult;
+																			ops aux3;
+																			aux3.prim=crearOp("etiq",etiquetaIf,NULL,NULL);
+																			aux3.ult=aux3.prim;
+																			ops tablaListas[6]={(yyvsp[-4].mips),aux1,(yyvsp[-2].mips),aux2,(yyvsp[0].mips),aux3};
+																			concatenarListasOp((yyval.mips).prim,(yyval.mips).ult,tablaListas,6);
+																			liberarReg((yyvsp[-4].mips).ult->res);
+																		}
+																	}
+#line 1548 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 76 "minic.y" /* yacc.c:1646  */
-    { printf("statement->IF ( expression ) statement ELSE statement\n");}
-#line 1516 "minic.tab.c" /* yacc.c:1646  */
+#line 110 "minic.y" /* yacc.c:1646  */
+    {
+		 												if(num_errores==0){
+															char* etiqueta=nuevaEtiqueta();
+															ops aux1;
+															aux1.prim=crearOp("beqz",(yyvsp[-2].mips).ult->res,etiqueta,NULL);
+															aux1.ult=aux1.prim;
+															ops aux2;
+															aux2.prim=crearOp("etiq",etiqueta,NULL,NULL);
+															aux2.ult=aux2.prim;
+															ops tablaListas[4]={(yyvsp[-2].mips),aux1,(yyvsp[0].mips),aux2};
+															concatenarListasOp((yyval.mips).prim,(yyval.mips).ult,tablaListas,4);
+															liberarReg((yyvsp[-2].mips).ult->res);
+														}
+													}
+#line 1567 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 77 "minic.y" /* yacc.c:1646  */
-    { printf("statement->IF ( expression ) statement\n");}
-#line 1522 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 19:
-#line 78 "minic.y" /* yacc.c:1646  */
-    { printf("statement->WHILE ( expression ) statement\n");}
-#line 1528 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 20:
-#line 79 "minic.y" /* yacc.c:1646  */
-    { printf("statement->PRINT print_list ;\n");}
-#line 1534 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 21:
-#line 80 "minic.y" /* yacc.c:1646  */
-    { printf("statement->READ read_list ;\n");}
-#line 1540 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 22:
-#line 81 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1546 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 23:
-#line 82 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line);}
-#line 1552 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 24:
-#line 85 "minic.y" /* yacc.c:1646  */
-    { printf("print_list->print_item\n");}
-#line 1558 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 25:
-#line 86 "minic.y" /* yacc.c:1646  */
-    { printf("print_list->print_list,print_item\n");}
-#line 1564 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 26:
-#line 89 "minic.y" /* yacc.c:1646  */
-    { printf("print_item->expression\n");}
-#line 1570 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 27:
-#line 90 "minic.y" /* yacc.c:1646  */
-    { printf("print_item->CADENA\n");}
-#line 1576 "minic.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 28:
-#line 93 "minic.y" /* yacc.c:1646  */
-    { 	printf("read_list->ID\n");
-						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
-							yyerror(bufErr);			
-						}	
-						else if(consultarTipoVar(lVar,(yyvsp[0].str))==0){
-							snprintf(bufErr,128,"La variable %s se declaró como constantes",(yyvsp[0].str));
-							yyerror(bufErr);			
-						}				
-					}
+#line 125 "minic.y" /* yacc.c:1646  */
+    { 
+			 												if(num_errores==0){
+																char* etiquetaInicio=nuevaEtiqueta();
+																char* etiquetaFin=nuevaEtiqueta();
+																ops aux1;
+																aux1.prim=crearOp("etiq",etiquetaInicio,NULL,NULL);
+																aux1.ult=aux1.prim;
+																ops aux2;
+																aux2.prim=crearOp("beqz",(yyvsp[-2].mips).ult->res,etiquetaFin,NULL);
+																aux2.ult=aux2.prim;
+																ops aux3;
+																aux3.prim=crearOp("b",etiquetaInicio,NULL,NULL);
+																aux3.ult=crearOp("etiq",etiquetaFin,NULL,NULL);
+																aux3.prim->sig=aux3.ult;
+																ops tablaListas[5]={aux1,(yyvsp[-2].mips),aux2,(yyvsp[0].mips),aux3};
+																concatenarListasOp((yyval.mips).prim,(yyval.mips).ult,tablaListas,5);
+																liberarReg((yyvsp[-2].mips).ult->res);
+															}
+														}
 #line 1591 "minic.tab.c" /* yacc.c:1646  */
     break;
 
+  case 19:
+#line 144 "minic.y" /* yacc.c:1646  */
+    {
+			 												if(num_errores==0){
+																char* etiqueta=nuevaEtiqueta();
+																ops aux1;
+																aux1.prim=crearOp("etiq",etiqueta,NULL,NULL);
+																aux1.ult=aux1.prim;
+																ops aux2;
+																aux2.prim=crearOp("bnez",(yyvsp[-1].mips).ult->res,etiqueta,NULL);
+																aux2.ult=aux2.prim;
+																ops tablaListas[4]={aux1,(yyvsp[-4].mips),(yyvsp[-1].mips),aux2};
+																concatenarListasOp((yyval.mips).prim,(yyval.mips).ult,tablaListas,4);
+																liberarReg((yyvsp[-1].mips).ult->res);
+															}
+														}
+#line 1610 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 158 "minic.y" /* yacc.c:1646  */
+    { printf("statement->PRINT print_list ;\n");}
+#line 1616 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 159 "minic.y" /* yacc.c:1646  */
+    { printf("statement->READ read_list ;\n");}
+#line 1622 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 160 "minic.y" /* yacc.c:1646  */
+    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line); num_errores++;}
+#line 1628 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 161 "minic.y" /* yacc.c:1646  */
+    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line); num_errores++;}
+#line 1634 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 164 "minic.y" /* yacc.c:1646  */
+    { printf("print_list->print_item\n");}
+#line 1640 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 165 "minic.y" /* yacc.c:1646  */
+    { printf("print_list->print_list,print_item\n");}
+#line 1646 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 168 "minic.y" /* yacc.c:1646  */
+    { printf("print_item->expression\n");}
+#line 1652 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 169 "minic.y" /* yacc.c:1646  */
+    { printf("print_item->CADENA\n");}
+#line 1658 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 172 "minic.y" /* yacc.c:1646  */
+    { 	printf("read_list->ID\n");
+						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));			//Llamada al sistema 5
+							yyerror(bufErr);	
+							num_errores++;		
+						}	
+						else if(consultarTipoVar(lVar,(yyvsp[0].str))==0){
+							snprintf(bufErr,128,"La variable %s se declaró como constante",(yyvsp[0].str));
+							yyerror(bufErr);	
+							num_errores++;		
+						}				
+					}
+#line 1675 "minic.tab.c" /* yacc.c:1646  */
+    break;
+
   case 29:
-#line 103 "minic.y" /* yacc.c:1646  */
+#line 184 "minic.y" /* yacc.c:1646  */
     {	printf("read_list->read_list , ID\n");
 										if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 											snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
 											yyerror(bufErr);			
+											num_errores++;
 										}	
 										else if(consultarTipoVar(lVar,(yyvsp[0].str))==0){
-											snprintf(bufErr,128,"La variable %s se declaró como constantes",(yyvsp[0].str));
-											yyerror(bufErr);			
+											snprintf(bufErr,128,"La variable %s se declaró como constante",(yyvsp[0].str));
+											yyerror(bufErr);	
+											num_errores++;		
 										}					
 									}
-#line 1606 "minic.tab.c" /* yacc.c:1646  */
+#line 1692 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 115 "minic.y" /* yacc.c:1646  */
-    { printf("expression->expression + expression\n");}
-#line 1612 "minic.tab.c" /* yacc.c:1646  */
+#line 198 "minic.y" /* yacc.c:1646  */
+    { 
+												if(num_errores==0){
+													(yyval.mips).prim=(yyvsp[-2].mips).prim;
+													(yyvsp[-2].mips).ult->sig=(yyvsp[0].mips).prim;
+													(yyvsp[0].mips).ult->sig=crearOp("add",obtenerReg(),(yyvsp[-2].mips).ult->res,(yyvsp[0].mips).ult->res);
+													(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+													liberarReg((yyvsp[-2].mips).ult->res);
+													liberarReg((yyvsp[0].mips).ult->res);
+												}
+											}
+#line 1707 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 116 "minic.y" /* yacc.c:1646  */
-    { printf("expression->expression - expression\n");}
-#line 1618 "minic.tab.c" /* yacc.c:1646  */
+#line 208 "minic.y" /* yacc.c:1646  */
+    {
+												if(num_errores==0){
+													(yyval.mips).prim=(yyvsp[-2].mips).prim;
+													(yyvsp[-2].mips).ult->sig=(yyvsp[0].mips).prim;
+													(yyvsp[0].mips).ult->sig=crearOp("sub",obtenerReg(),(yyvsp[-2].mips).ult->res,(yyvsp[0].mips).ult->res);
+													(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+													liberarReg((yyvsp[-2].mips).ult->res);
+													liberarReg((yyvsp[0].mips).ult->res);
+												}
+											}
+#line 1722 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 117 "minic.y" /* yacc.c:1646  */
-    { printf("expression->expression * expression\n");}
-#line 1624 "minic.tab.c" /* yacc.c:1646  */
+#line 218 "minic.y" /* yacc.c:1646  */
+    { 
+												if(num_errores==0){
+													(yyval.mips).prim=(yyvsp[-2].mips).prim;
+													(yyvsp[-2].mips).ult->sig=(yyvsp[0].mips).prim;
+													(yyvsp[0].mips).ult->sig=crearOp("mul",obtenerReg(),(yyvsp[-2].mips).ult->res,(yyvsp[0].mips).ult->res);
+													(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+													liberarReg((yyvsp[-2].mips).ult->res);
+													liberarReg((yyvsp[0].mips).ult->res);
+												}
+											}
+#line 1737 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 118 "minic.y" /* yacc.c:1646  */
-    { printf("expression->expression / expression\n");}
-#line 1630 "minic.tab.c" /* yacc.c:1646  */
+#line 228 "minic.y" /* yacc.c:1646  */
+    { 
+													if(num_errores==0){
+														(yyval.mips).prim=(yyvsp[-2].mips).prim;
+														(yyvsp[-2].mips).ult->sig=(yyvsp[0].mips).prim;
+														(yyvsp[0].mips).ult->sig=crearOp("sub",obtenerReg(),(yyvsp[-2].mips).ult->res,(yyvsp[0].mips).ult->res);
+														(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+														liberarReg((yyvsp[-2].mips).ult->res);
+														liberarReg((yyvsp[0].mips).ult->res);
+													}
+												}
+#line 1752 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 119 "minic.y" /* yacc.c:1646  */
-    { printf("expression->-expression\n");}
-#line 1636 "minic.tab.c" /* yacc.c:1646  */
+#line 238 "minic.y" /* yacc.c:1646  */
+    { 
+													if(num_errores==0){
+														(yyval.mips).prim=(yyvsp[0].mips).prim;
+														(yyvsp[0].mips).ult->sig=crearOp("neg",obtenerReg(),(yyvsp[0].mips).ult->res,NULL);
+														(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+														liberarReg((yyvsp[0].mips).ult->res);
+													}
+												}
+#line 1765 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 120 "minic.y" /* yacc.c:1646  */
-    { printf("expression->( expression )\n");}
-#line 1642 "minic.tab.c" /* yacc.c:1646  */
+#line 246 "minic.y" /* yacc.c:1646  */
+    { (yyval.mips)=(yyvsp[-1].mips); }
+#line 1771 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 121 "minic.y" /* yacc.c:1646  */
-    { printf("expression->ID\n");
+#line 247 "minic.y" /* yacc.c:1646  */
+    { 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str)); 
 							yyerror(bufErr);	
+							num_errores++;
+						}
+						if(num_errores==0){
+							(yyval.mips).prim=crearOp("lw",obtenerReg(),concatStr("_",(yyvsp[0].str)),NULL); 
+							(yyval.mips).ult=(yyval.mips).prim; 
 						}
 					}
-#line 1653 "minic.tab.c" /* yacc.c:1646  */
+#line 1787 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 127 "minic.y" /* yacc.c:1646  */
-    { printf("expression->ENT\n");}
-#line 1659 "minic.tab.c" /* yacc.c:1646  */
+#line 258 "minic.y" /* yacc.c:1646  */
+    { 
+						if(num_errores==0){
+							(yyval.mips).prim=crearOp("li",obtenerReg(),concatStr("#",(yyvsp[0].str)),NULL); 
+							(yyval.mips).ult=(yyval.mips).prim; 
+						}
+					}
+#line 1798 "minic.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1663 "minic.tab.c" /* yacc.c:1646  */
+#line 1802 "minic.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1894,13 +2033,18 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 129 "minic.y" /* yacc.c:1906  */
+#line 265 "minic.y" /* yacc.c:1906  */
 
 /* Rutinas C */
 int yyerror(const char * msg){
 	fprintf(stderr,"%s (linea %d)\n",msg,yylineno);
 }
 
+char * nuevaEtiqueta(){
+	char aux[TAM_ETIQ];
+	snprintf(aux,TAM_ETIQ,"$l%d",num_etiq);
+	return strdup(aux);
+}
 
 
 

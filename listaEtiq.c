@@ -1,21 +1,21 @@
-#include "lista.h"
+#include "listaEtiq.h"
 #include <stdlib.h>
 #include <string.h>
 #include<stdio.h>
 
 struct listaRep {
 	char * nombre;
-	int tipo;	// 1 es VAR y 0 es LET
+	int tipo;	// 1 es Etiq y 0 es LET
 	struct listaRep * sig;
 };
 
 
-lista crearLista()
+listaEtiq crearListaEtiq()
 {
 	return NULL;
 }
 
-struct listaRep * buscarNodo(lista l, char * nombre)
+struct listaRep * buscarNodo(listaEtiq l, char * nombre)
 {
 	struct listaRep * aux =l;
 	while(aux !=NULL)
@@ -27,7 +27,7 @@ struct listaRep * buscarNodo(lista l, char * nombre)
 	return NULL;
 }
 
-void insertarVar(lista * l, char * nombre, int tipo)
+void insertarEtiq(listaEtiq * l, char * nombre, int tipo)
 {
 	struct listaRep * aux=(struct listaRep *)malloc(sizeof(struct listaRep));
 	aux->nombre=nombre;
@@ -36,7 +36,7 @@ void insertarVar(lista * l, char * nombre, int tipo)
 	*l=aux;
 }
 
-int consultarTipoVar(lista l,char * nombre)
+int consultarTipoEtiq(listaEtiq l,char * nombre)
 {
 	struct listaRep * aux=buscarNodo(l,nombre);
 	if(aux!=NULL)
@@ -46,7 +46,7 @@ int consultarTipoVar(lista l,char * nombre)
 }
 
 
-void borrarLista(lista l)
+void borrarListaEtiq(listaEtiq l)
 {
 	struct listaRep * aux=l;
 	while(aux!=NULL)
