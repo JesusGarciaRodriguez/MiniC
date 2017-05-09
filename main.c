@@ -1,5 +1,6 @@
 #include "minic.h"
 #include "listaVar.h"
+#include "listaStr.h"
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -7,6 +8,7 @@ extern FILE* yyin;
 extern int yyparse();
 extern int yydebug;
 extern listaVar lVar;
+extern listaStr lStr;
 
 int main(int argc, char** argv){
 
@@ -21,8 +23,10 @@ int main(int argc, char** argv){
         exit(2);
     }
 	yydebug=0;
+	lStr=crearListaStr();
 	lVar=crearListaVar();
     yyparse();
 	borrarListaVar(lVar);
+	borrarListaStr(lStr);
     fclose(yyin);
 }

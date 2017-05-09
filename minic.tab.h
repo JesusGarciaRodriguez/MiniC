@@ -64,10 +64,10 @@ extern int yydebug;
     IGUAL = 274,
     ALLAVE = 275,
     CLLAVE = 276,
-    CADENA = 277,
-    DO = 278,
-    ID = 279,
-    ENT = 280,
+    DO = 277,
+    ID = 278,
+    ENT = 279,
+    CADENA = 280,
     UMENOS = 281
   };
 #endif
@@ -77,7 +77,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "minic.y" /* yacc.c:1909  */
+#line 20 "minic.y" /* yacc.c:1909  */
 
 	char * str;
 	ops mips; 

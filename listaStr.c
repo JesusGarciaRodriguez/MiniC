@@ -19,7 +19,7 @@ listaStr crearListaStr()
 }
 
 
-void insertarStr(listaStr * l, char * cadena)
+char * insertarStr(listaStr * l, char * cadena)
 {
 	struct listaStr * aux=(struct listaStr *)malloc(sizeof(struct listaStr));
 	aux->cadena=strdup(cadena);
@@ -28,12 +28,13 @@ void insertarStr(listaStr * l, char * cadena)
 	aux->etiq=strdup(etiq);
 	aux->sig=*l;
 	*l=aux;
+	return aux->etiq;
 }
 
 void imprimirListaStr(listaStr l){
 	for(listaStr aux=l; aux!=NULL; aux=aux->sig){
 		printf("%s\n", aux->etiq);
-		printf("\t.asciiz \"%s\"",aux->cadena);
+		printf("\t.asciiz \"%s\"\n",aux->cadena);
 	} 
 }
 
@@ -45,7 +46,7 @@ void borrarListaStr(listaStr l)
 	{
 		l=aux->sig;
 		free(aux->cadena);
-		aux=aux->etiq;
+		free(aux->etiq);
 		free(aux);
 		aux=l;	
 	}

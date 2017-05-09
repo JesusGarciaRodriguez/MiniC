@@ -2,9 +2,9 @@
 #define _LISTASTR_H
 
 typedef struct listaStr * listaStr;
-// Solo copia
-listaStr crearLista();
-void insertarStr(listaStr * l, char * cadena);
+
+listaStr crearListaStr();
+char * insertarStr(listaStr * l, char * cadena);
 void imprimirListaStr(listaStr l);
 void borrarListaStr(listaStr l);
 

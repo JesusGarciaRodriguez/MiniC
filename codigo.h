@@ -19,7 +19,8 @@ char * obtenerReg();
 void liberarReg(char* reg);
 char * concatInt(char * pref, int i);
 char * concatStr(char * pref, char* suf);
-void imprimirCod(ops cod);
-void concatenarListasOp(op* prim, op* ult, ops* listas, int length);
+void imprimirCodigo(ops cod);
+char * nuevaEtiqueta();
+void concatenarListasOp(ops* SS, ops* listas, int length);
 
 #endif

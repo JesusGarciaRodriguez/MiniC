@@ -1,3 +1,14 @@
+**** Para depurar ****
+añadir a gcc -g. gdb ./analizador, run prueba.txt, back
+
+
+
+
+
+
+
+
+
 Quitar todos los print(menos errores).
 Falta una lista de strings 
 
@@ -19,45 +30,3 @@ print "Final","\n";
 
 %expects 1 (para decir que sabemos que va a haber un conflicto (id else))
 
-
-//codigo.h, codigo.c nuevos ficheros
-typedef struct ops{
-	op * prim;
-	op * ult;
-} ops;
-
-
-typedef struct operacion{
-	char * codOp;
-	char * res;
-	char * arg1;
-	char * arg2;
-	struct operacion * sig;
-}	op;
-
-Funciones necesarias: CrearOperacion, ObtenerRegistro, 
-
-
-En codigo.c:
-int regOcupado[10]={0};
-char * obtenerReg(){
-	int i=0;
-	while(i<10 && regOcupado[i])
-		i++;
-	if(i<10)
-		return concati("$t",i);
-	fprintf(stderr,"No hay registros libres");
-	exit(1);
-}
-
-char * concati(char * pref, int i){
-	char aux[64];
-	snprintf(aux,64,"%s%d",pref,i);
-	return strdup(aux);
-}
-
-char * concatStr(char * pref, char* suf){
-	char aux[64];
-	snprintf(aux,64,"%s%s",pref,suf);
-	return strdup(aux);
-}

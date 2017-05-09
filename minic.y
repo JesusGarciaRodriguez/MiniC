@@ -4,18 +4,17 @@
 #include<stdlib.h>
 #include<string.h>
 #include "listaVar.h"
-//#include "listaStr.h"
-#define TAM_ETIQ 10
+#include "listaStr.h"
 
 extern int yylex();
 int yyerror(const char * msg);
 extern int yylineno;
 char * nuevaEtiqueta();
 listaVar lVar;
+listaStr lStr;
 int tipo;
 char bufErr[128];
 int num_errores=0;
-int num_etiq=0;
 %}
 
 %union {
@@ -23,9 +22,9 @@ int num_etiq=0;
 	ops mips; 
 }
 
-%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE CADENA DO
-%token<str> ID ENT
-%type<mips> expression statement statement_list
+%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO
+%token<str> ID ENT CADENA
+%type<mips> expression statement statement_list print_list print_item read_list 
 
 // Precedencia y asociatividad
 %left MAS MENOS //MAS mENOS igual precendencia, asoc por la izquierda
@@ -34,13 +33,14 @@ int num_etiq=0;
 
 %%
 
-program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE { printf("program->FUNC ID(){declarations statement_list}\n"); 	imprimirListaVar(lVar);} //if(num_Errores==0)// .data imprimirStrings  imprimirIds  //main imprimirCodigo(&$6); imprimirCodigo(&$7);  liberarMips? else printf("Errores encontrados: %d.",num_errores);
+program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE { printf("program->FUNC ID(){declarations statement_list}\n"); 	imprimirListaVar(lVar); printf(".text\n.globl main:\n"); imprimirCodigo($7);} //if(num_Errores==0)// .data imprimirStrings  imprimirIds  //main imprimirCodigo($6); imprimirCodigo($7);  liberarMips? else printf("Errores encontrados: %d.",num_errores);
 			;
 
 declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA { printf("declarations->declarations VAR identifier_list ;\n");} 
 			|	declarations LET {tipo=0;} identifier_list PTOCOMA { printf("declarations->declarations LET identifier_list ;\n");}
 			|	/*Lambda*/ { printf("declarations->lambda\n");}
-			// DA CONFLICTO| 	error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
+			| 	declarations VAR error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
+			| 	declarations LET error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
 			;
 
 identifier_list: asig { printf("identifier_list->asig\n");}
@@ -65,8 +65,13 @@ asig:			ID { 	printf("asig->ID\n");
 									}
 			;
 
-statement_list:	statement_list statement { printf("statement_list->statement_list statement\n");}
-			|	/*lambda*/{ $$.prim=NULL; $$.ult==NULL;}	//Por culpa de esto hay que comprobar todos los ult y prim
+statement_list:	statement_list statement 	{ 
+												if(num_errores==0){
+													ops tablaListas[2]={$1,$2};
+													concatenarListasOp(&$$,tablaListas,2);	
+												}
+											}
+			|	/*lambda*/{ $$.prim=NULL; $$.ult=NULL;}	
 			;
 
 statement:		ID IGUAL expression PTOCOMA { 
@@ -103,7 +108,7 @@ statement:		ID IGUAL expression PTOCOMA {
 																			aux3.prim=crearOp("etiq",etiquetaIf,NULL,NULL);
 																			aux3.ult=aux3.prim;
 																			ops tablaListas[6]={$3,aux1,$5,aux2,$7,aux3};
-																			concatenarListasOp($$.prim,$$.ult,tablaListas,6);
+																			concatenarListasOp(&$$,tablaListas,6);
 																			liberarReg($3.ult->res);
 																		}
 																	}
@@ -117,7 +122,7 @@ statement:		ID IGUAL expression PTOCOMA {
 															aux2.prim=crearOp("etiq",etiqueta,NULL,NULL);
 															aux2.ult=aux2.prim;
 															ops tablaListas[4]={$3,aux1,$5,aux2};
-															concatenarListasOp($$.prim,$$.ult,tablaListas,4);
+															concatenarListasOp(&$$,tablaListas,4);
 															liberarReg($3.ult->res);
 														}
 													} 
@@ -137,7 +142,7 @@ statement:		ID IGUAL expression PTOCOMA {
 																aux3.ult=crearOp("etiq",etiquetaFin,NULL,NULL);
 																aux3.prim->sig=aux3.ult;
 																ops tablaListas[5]={aux1,$3,aux2,$5,aux3};
-																concatenarListasOp($$.prim,$$.ult,tablaListas,5);
+																concatenarListasOp(&$$,tablaListas,5);
 																liberarReg($3.ult->res);
 															}
 														}
@@ -151,22 +156,42 @@ statement:		ID IGUAL expression PTOCOMA {
 																aux2.prim=crearOp("bnez",$5.ult->res,etiqueta,NULL);
 																aux2.ult=aux2.prim;
 																ops tablaListas[4]={aux1,$2,$5,aux2};
-																concatenarListasOp($$.prim,$$.ult,tablaListas,4);
+																concatenarListasOp(&$$,tablaListas,4);
 																liberarReg($5.ult->res);
 															}
 														}
-			|	PRINT print_list PTOCOMA { printf("statement->PRINT print_list ;\n");}
+			|	PRINT print_list PTOCOMA { if(num_errores==0) $$=$2;}
 			|	READ read_list PTOCOMA { printf("statement->READ read_list ;\n");}
 			| 	error CLLAVE { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;} 
 			| 	error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
 			;
 			
-print_list:		print_item { printf("print_list->print_item\n");}
-			|	print_list COMA print_item { printf("print_list->print_list,print_item\n");}
+print_list:		print_item { if(num_errores==0) $$=$1; }
+			|	print_list COMA print_item 	{
+												if(num_errores==0){
+													ops tablaListas[2]={$1,$3};
+													concatenarListasOp(&$$,tablaListas,2);						
+												}	
+											}
 			;
 
-print_item:		expression { printf("print_item->expression\n");}//mv $a0, $res
-			|	CADENA { printf("print_item->CADENA\n");}//Añadirlo a la lista de string junto con su etiqueta (por ejemplo dejar etiquetas ahí la $a0, etiq
+print_item:		expression 	{
+								if(num_errores==0 && $1.prim!=NULL){
+									$$.prim=$1.prim;
+									$1.ult->sig=crearOp("mv","a0",$$.ult->res,NULL);
+									$1.ult->sig->sig=crearOp("li","v0","1",NULL);
+									$1.ult->sig->sig->sig=crearOp("syscall",NULL,NULL,NULL);
+									$$.ult=$1.ult->sig->sig->sig;
+								}
+							}
+			|	CADENA 	{ 	if(num_errores==0){
+								char * etiqueta=insertarStr(&lStr,$1);
+								$$.prim=crearOp("la","a0",etiqueta,NULL);
+								$$.prim->sig=crearOp("li","v0","4",NULL);
+								$$.prim->sig->sig=crearOp("syscall",NULL,NULL,NULL);
+								$$.ult=$$.prim->sig->sig;
+							}
+						}
 			;
 
 read_list:		ID { 	printf("read_list->ID\n");
@@ -257,7 +282,7 @@ expression:		expression MAS expression 	{
 					}
 			|	ENT { 
 						if(num_errores==0){
-							$$.prim=crearOp("li",obtenerReg(),concatStr("#",$1),NULL); 
+							$$.prim=crearOp("li",obtenerReg(),$1,NULL); 
 							$$.ult=$$.prim; 
 						}
 					}
@@ -268,11 +293,6 @@ int yyerror(const char * msg){
 	fprintf(stderr,"%s (linea %d)\n",msg,yylineno);
 }
 
-char * nuevaEtiqueta(){
-	char aux[TAM_ETIQ];
-	snprintf(aux,TAM_ETIQ,"$l%d",num_etiq);
-	return strdup(aux);
-}
 
 
 

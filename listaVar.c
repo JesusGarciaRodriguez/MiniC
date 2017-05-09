@@ -48,8 +48,8 @@ int consultarTipoVar(listaVar l,char * nombre)
 
 void imprimirListaVar(listaVar l){
 	for(listaVar aux=l; aux!=NULL; aux=aux->sig){
-		printf("%s\n", aux->nombre);
-		printf("\t.word 0");
+		printf("_%s\n", aux->nombre);
+		printf("\t.word 0\n");
 	} 
 }
 
