@@ -54,6 +54,11 @@ read	{
 	}
 do	{	return DO;
 	}
+
+int { return INT;}
+
+float { return FLOAT;}
+
 ";"	{
 			//printf("PTOCOMA\n");
 			return PTOCOMA;		

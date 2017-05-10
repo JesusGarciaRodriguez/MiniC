@@ -6,6 +6,7 @@
 struct listaRep {
 	char * nombre;
 	int tipo;	// 1 es VAR y 0 es LET
+	int tipoDeDatos; //1 FLOAT 0 INT
 	struct listaRep * sig;
 };
 
@@ -27,12 +28,13 @@ struct listaRep * buscarNodo(listaVar l, char * nombre)
 	return NULL;
 }
 
-void insertarVar(listaVar * l, char * nombre, int tipo)
+void insertarVar(listaVar * l, char * nombre, int tipo, int tipoDeDatos)
 {
 	struct listaRep * aux=(struct listaRep *)malloc(sizeof(struct listaRep));
 	aux->nombre=nombre;
 	aux->tipo=tipo;
 	aux->sig=*l;
+	aux->tipoDeDatos=tipoDeDatos;
 	*l=aux;
 }
 

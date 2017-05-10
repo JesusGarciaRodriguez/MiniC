@@ -13,6 +13,7 @@ char * nuevaEtiqueta();
 listaVar lVar;
 listaStr lStr;
 int tipo;
+int tipoDeDatos;
 char bufErr[128];
 int num_errores=0;
 %}
@@ -22,7 +23,7 @@ int num_errores=0;
 	ops mips; 
 }
 
-%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO
+%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO INT FLOAT
 %token<str> ID ENT CADENA
 %type<mips> expression statement statement_list print_list print_item read_list asig identifier_list declarations
 
@@ -48,18 +49,30 @@ program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE 	{
 																				} 
 			;
 
-declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA 	{ 
-																		if(num_errores==0){
-																			ops tablaListas[2]={$1,$4};
-																			concatenarListasOp(&$$,tablaListas,2);						
-																		}	
-																	} 
-			|	declarations LET {tipo=0;} identifier_list PTOCOMA { 
-																		if(num_errores==0){
-																			ops tablaListas[2]={$1,$4};
-																			concatenarListasOp(&$$,tablaListas,2);						
-																		}	
-																	} 
+declarations:	declarations VAR FLOAT{tipo=1; tipoDeDatos=1; } identifier_list PTOCOMA { 
+																							if(num_errores==0){
+																								ops tablaListas[2]={$1,$4};
+																								concatenarListasOp(&$$,tablaListas,2);						
+																							}	
+																						} 
+			|	declarations VAR INT {tipo=1; tipoDeDatos=0; } identifier_list PTOCOMA 	{ 
+																							if(num_errores==0){
+																								ops tablaListas[2]={$1,$4};
+																								concatenarListasOp(&$$,tablaListas,2);						
+																							}	
+																						} 				
+			|	declarations LET FLOAT {tipo=0; tipoDeDatos=1; } identifier_list PTOCOMA 	{ 
+																								if(num_errores==0){
+																									ops tablaListas[2]={$1,$4};
+																									concatenarListasOp(&$$,tablaListas,2);						
+																								}	
+																							} 
+			|	declarations LET INT {tipo=0; tipoDeDatos=0; } identifier_list PTOCOMA 	{ 
+																							if(num_errores==0){
+																								ops tablaListas[2]={$1,$4};
+																								concatenarListasOp(&$$,tablaListas,2);						
+																							}	
+																						} 
 			|	/*Lambda*/ { $$.prim=NULL; $$.ult=NULL; }
 			| 	declarations VAR error PTOCOMA { /*printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);*/ num_errores++;}
 			| 	declarations LET error PTOCOMA { num_errores++;}
@@ -81,7 +94,7 @@ asig:			ID {
 							num_errores++;
 						}			
 						else 
-							insertarVar(&lVar,$1,tipo);
+							insertarVar(&lVar,$1,tipo,tipoDeDatos);
 						if(num_errores==0){
 							$$.prim=NULL; $$.ult=NULL;
 						}
@@ -93,7 +106,7 @@ asig:			ID {
 											num_errores++;		
 										}						
 										else 
-											insertarVar(&lVar,$1,tipo);
+											insertarVar(&lVar,$1,tipo,tipoDeDatos);
 										if(num_errores==0){
 											$$.prim=$3.prim; 
 											$3.ult->sig=crearOp("sw",$3.ult->res,concatStr("_",$1),NULL);	

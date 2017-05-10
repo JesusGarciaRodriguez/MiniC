@@ -12,6 +12,7 @@ typedef struct operacion{
 typedef struct listaOp{
 	op * prim;
 	op * ult;
+	int tipoRes;
 } ops;
 
 op * crearOp(char* codOp, char* res, char* arg1, char* arg2);
