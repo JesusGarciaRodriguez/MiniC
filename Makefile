@@ -10,5 +10,6 @@ lex.yy.c: minic.l minic.tab.h
 run:	prueba.txt analizador
 		./analizador prueba.txt
 
+
 clean:
 		rm analizador minic.tab.* lex.yy.c

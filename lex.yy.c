@@ -1063,13 +1063,14 @@ case 27:
 YY_RULE_SETUP
 #line 144 "minic.l"
 { 	
-					//printf("CADENA ENTRECOMILLADA: %s\n",yytext);						
+					//printf("CADENA ENTRECOMILLADA: %s\n",yytext);		
+					yylval.str=strdup(yytext);				
 					return CADENA;	
 				}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 149 "minic.l"
+#line 150 "minic.l"
 {
 			printf("*** Error léxico (linea %d): %s ***\n",yylineno,yytext);
 			nErrores++;
@@ -1079,24 +1080,24 @@ YY_RULE_SETUP
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 155 "minic.l"
+#line 156 "minic.l"
 { yymore(); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 156 "minic.l"
+#line 157 "minic.l"
 { /*printf("COMENTARIO:\n%s\n", yytext);*/BEGIN(INITIAL); }
 	YY_BREAK
 case YY_STATE_EOF(comentario):
-#line 157 "minic.l"
+#line 158 "minic.l"
 { printf("*** COMENTARIO SIN CERRAR (abierto en la linea %d) ***\n",comienzo_comentario); return 0; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 182 "minic.l"
+#line 183 "minic.l"
 ECHO;
 	YY_BREAK
-#line 1100 "lex.yy.c"
+#line 1101 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2109,4 +2110,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 182 "minic.l"
+#line 183 "minic.l"

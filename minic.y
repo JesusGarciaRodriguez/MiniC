@@ -24,7 +24,7 @@ int num_errores=0;
 
 %token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO
 %token<str> ID ENT CADENA
-%type<mips> expression statement statement_list print_list print_item read_list 
+%type<mips> expression statement statement_list print_list print_item read_list asig identifier_list declarations
 
 // Precedencia y asociatividad
 %left MAS MENOS //MAS mENOS igual precendencia, asoc por la izquierda
@@ -33,35 +33,73 @@ int num_errores=0;
 
 %%
 
-program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE { printf("program->FUNC ID(){declarations statement_list}\n"); 	imprimirListaVar(lVar); printf(".text\n.globl main:\n"); imprimirCodigo($7);} //if(num_Errores==0)// .data imprimirStrings  imprimirIds  //main imprimirCodigo($6); imprimirCodigo($7);  liberarMips? else printf("Errores encontrados: %d.",num_errores);
+program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE 	{ 
+																					if(num_errores==0){
+																						printf(".data\n\n."); 
+																						imprimirListaStr(lStr);
+																						imprimirListaVar(lVar); 
+																						printf("\n.text\n.globl main\nmain:\n"); 
+																						imprimirCodigo($6);
+																						imprimirCodigo($7);
+																						printf("\tjr $ra\n"); 
+																					}
+																					else
+																						printf("Se han detectado errores. No se generará código\n");
+																				} 
 			;
 
-declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA { printf("declarations->declarations VAR identifier_list ;\n");} 
-			|	declarations LET {tipo=0;} identifier_list PTOCOMA { printf("declarations->declarations LET identifier_list ;\n");}
-			|	/*Lambda*/ { printf("declarations->lambda\n");}
-			| 	declarations VAR error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
-			| 	declarations LET error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
+declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA 	{ 
+																		if(num_errores==0){
+																			ops tablaListas[2]={$1,$4};
+																			concatenarListasOp(&$$,tablaListas,2);						
+																		}	
+																	} 
+			|	declarations LET {tipo=0;} identifier_list PTOCOMA { 
+																		if(num_errores==0){
+																			ops tablaListas[2]={$1,$4};
+																			concatenarListasOp(&$$,tablaListas,2);						
+																		}	
+																	} 
+			|	/*Lambda*/ { $$.prim=NULL; $$.ult=NULL; }
+			| 	declarations VAR error PTOCOMA { /*printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);*/ num_errores++;}
+			| 	declarations LET error PTOCOMA { num_errores++;}
 			;
 
-identifier_list: asig { printf("identifier_list->asig\n");}
-			|	identifier_list COMA asig {printf("identifier_list->identifier_list , asig\n");}
+identifier_list: asig { $$=$1;}
+			|	identifier_list COMA asig 	{
+												if(num_errores==0){
+													ops tablaListas[2]={$1,$3};
+													concatenarListasOp(&$$,tablaListas,2);						
+												}	
+											}
 			;
 
-asig:			ID { 	printf("asig->ID\n"); 
+asig:			ID {
 						if(consultarTipoVar(lVar,$1)!=-1){
 							snprintf(bufErr,128,"La variable %s ya ha sido declarada",$1);
 							yyerror(bufErr);			
 							num_errores++;
 						}			
-						else insertarVar(&lVar,$1,tipo);
+						else 
+							insertarVar(&lVar,$1,tipo);
+						if(num_errores==0){
+							$$.prim=NULL; $$.ult=NULL;
+						}
 					}
-			| 	ID IGUAL expression { 	printf("asig->ID = expression\n");				//Bloque de código 
+			| 	ID IGUAL expression {			
 										if(consultarTipoVar(lVar,$1)!=-1){
 											snprintf(bufErr,128,"La variable %s ya ha sido declarada",$1);
 											yyerror(bufErr);	
 											num_errores++;		
 										}						
-										else insertarVar(&lVar,$1,tipo);
+										else 
+											insertarVar(&lVar,$1,tipo);
+										if(num_errores==0){
+											$$.prim=$3.prim; 
+											$3.ult->sig=crearOp("sw",$3.ult->res,concatStr("_",$1),NULL);	
+											$$.ult=$3.ult->sig;
+											liberarReg($3.ult->res);
+										}
 									}
 			;
 
@@ -95,14 +133,14 @@ statement:		ID IGUAL expression PTOCOMA {
 			|	ALLAVE statement_list CLLAVE { $$=$2;}		
 			| 	IF APAR expression CPAR statement ELSE statement 	{ 
 						 												if(num_errores==0){
-																			char* etiquetaIf=nuevaEtiqueta();
 																			char* etiquetaElse=nuevaEtiqueta();
+																			char* etiquetaIf=nuevaEtiqueta();
 																			ops aux1;
 																			aux1.prim=crearOp("beqz",$3.ult->res,etiquetaElse,NULL);
 																			aux1.ult=aux1.prim;
 																			ops aux2;
 																			aux2.prim=crearOp("b",etiquetaIf,NULL,NULL);
-																			aux2.ult=crearOp("etiq",$5.ult->res,etiquetaElse,NULL);
+																			aux2.ult=crearOp("etiq",etiquetaElse,NULL,NULL);
 																			aux2.prim->sig=aux2.ult;
 																			ops aux3;
 																			aux3.prim=crearOp("etiq",etiquetaIf,NULL,NULL);
@@ -161,9 +199,9 @@ statement:		ID IGUAL expression PTOCOMA {
 															}
 														}
 			|	PRINT print_list PTOCOMA { if(num_errores==0) $$=$2;}
-			|	READ read_list PTOCOMA { printf("statement->READ read_list ;\n");}
-			| 	error CLLAVE { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;} 
-			| 	error PTOCOMA { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line); num_errores++;}
+			|	READ read_list PTOCOMA { if(num_errores==0) $$=$2;}
+			| 	error CLLAVE { num_errores++;} 
+			| 	error PTOCOMA { num_errores++;}
 			;
 			
 print_list:		print_item { if(num_errores==0) $$=$1; }
@@ -176,25 +214,27 @@ print_list:		print_item { if(num_errores==0) $$=$1; }
 			;
 
 print_item:		expression 	{
-								if(num_errores==0 && $1.prim!=NULL){
+								if(num_errores==0){
 									$$.prim=$1.prim;
-									$1.ult->sig=crearOp("mv","a0",$$.ult->res,NULL);
-									$1.ult->sig->sig=crearOp("li","v0","1",NULL);
+									$1.ult->sig=crearOp("move","$a0",$$.ult->res,NULL);
+									$1.ult->sig->sig=crearOp("li","$v0","1",NULL);
 									$1.ult->sig->sig->sig=crearOp("syscall",NULL,NULL,NULL);
 									$$.ult=$1.ult->sig->sig->sig;
+									liberarReg($1.ult->res);
 								}
 							}
-			|	CADENA 	{ 	if(num_errores==0){
+			|	CADENA 	{ 	
+							if(num_errores==0){
 								char * etiqueta=insertarStr(&lStr,$1);
-								$$.prim=crearOp("la","a0",etiqueta,NULL);
-								$$.prim->sig=crearOp("li","v0","4",NULL);
+								$$.prim=crearOp("la","$a0",etiqueta,NULL);
+								$$.prim->sig=crearOp("li","$v0","4",NULL);
 								$$.prim->sig->sig=crearOp("syscall",NULL,NULL,NULL);
 								$$.ult=$$.prim->sig->sig;
 							}
 						}
 			;
 
-read_list:		ID { 	printf("read_list->ID\n");
+read_list:		ID { 
 						if(consultarTipoVar(lVar,$1)==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);			//Llamada al sistema 5
 							yyerror(bufErr);	
@@ -204,7 +244,14 @@ read_list:		ID { 	printf("read_list->ID\n");
 							snprintf(bufErr,128,"La variable %s se declaró como constante",$1);
 							yyerror(bufErr);	
 							num_errores++;		
-						}				
+						}	
+						if(num_errores==0){
+								$$.prim=crearOp("li","$v0","5",NULL);
+								$$.prim->sig=crearOp("syscall",NULL,NULL,NULL);
+								$$.prim->sig->sig=crearOp("sw","$v0",concatStr("_",$1),NULL);
+								$$.ult=$$.prim->sig->sig;
+							}
+									
 					}
 			|	read_list COMA ID 	{	printf("read_list->read_list , ID\n");
 										if(consultarTipoVar(lVar,$3)==-1){
@@ -216,7 +263,17 @@ read_list:		ID { 	printf("read_list->ID\n");
 											snprintf(bufErr,128,"La variable %s se declaró como constante",$3);
 											yyerror(bufErr);	
 											num_errores++;		
-										}					
+										}
+										if(num_errores==0){
+													ops aux;
+													aux.prim=crearOp("li","$v0","5",NULL);
+													aux.prim->sig=crearOp("syscall",NULL,NULL,NULL);
+													aux.prim->sig->sig=crearOp("sw","$v0",concatStr("_",$3),NULL);
+													aux.ult=aux.prim->sig->sig;
+													ops tablaListas[2]={$1,aux};
+													concatenarListasOp(&$$,tablaListas,2);						
+												}		
+														
 									}
 			;
 

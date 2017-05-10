@@ -3,7 +3,7 @@
 #include <string.h>
 #include<stdio.h>
 
-int num_cadenas=0;
+int num_cadenas=1;
 
 //Solo copia
 struct listaStr {
@@ -28,13 +28,14 @@ char * insertarStr(listaStr * l, char * cadena)
 	aux->etiq=strdup(etiq);
 	aux->sig=*l;
 	*l=aux;
+	num_cadenas++;
 	return aux->etiq;
 }
 
 void imprimirListaStr(listaStr l){
 	for(listaStr aux=l; aux!=NULL; aux=aux->sig){
 		printf("%s\n", aux->etiq);
-		printf("\t.asciiz \"%s\"\n",aux->cadena);
+		printf("\t.asciiz %s\n",aux->cadena);
 	} 
 }
 

@@ -142,7 +142,8 @@ do	{	return DO;
 				}
 
 \"([^"\r\n]|\\\")*\" { 	
-					//printf("CADENA ENTRECOMILLADA: %s\n",yytext);						
+					//printf("CADENA ENTRECOMILLADA: %s\n",yytext);		
+					yylval.str=strdup(yytext);				
 					return CADENA;	
 				}
 

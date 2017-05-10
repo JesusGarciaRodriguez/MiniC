@@ -5,7 +5,7 @@
 #define TAM_ETIQ 10
 
 int regOcupado[10]={0};
-int num_etiq=0;
+int num_etiq=1;
 
 
 op * crearOp(char* codOp, char* res, char* arg1, char* arg2){

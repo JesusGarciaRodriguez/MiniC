@@ -161,30 +161,16 @@ typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-/* Location type.  */
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE YYLTYPE;
-struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-};
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
 
 extern YYSTYPE yylval;
-extern YYLTYPE yylloc;
+
 int yyparse (void);
 
 #endif /* !YY_YY_MINIC_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 188 "minic.tab.c" /* yacc.c:358  */
+#line 174 "minic.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -365,15 +351,13 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-         || (defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL \
-             && defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
   yytype_int16 yyss_alloc;
   YYSTYPE yyvs_alloc;
-  YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
@@ -382,8 +366,8 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
-      + 2 * YYSTACK_GAP_MAXIMUM)
+     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
+      + YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
 
@@ -486,10 +470,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    36,    36,    39,    39,    40,    40,    41,    42,    43,
-      46,    47,    50,    58,    68,    74,    77,    95,    96,   115,
-     130,   149,   163,   164,   165,   166,   169,   170,   178,   187,
-     197,   209,   223,   233,   243,   253,   263,   271,   272,   283
+       0,    36,    36,    51,    51,    57,    57,    63,    64,    65,
+      68,    69,    77,    89,   106,   112,   115,   133,   134,   153,
+     168,   187,   201,   202,   203,   204,   207,   208,   216,   226,
+     237,   256,   280,   290,   300,   310,   320,   328,   329,   340
 };
 #endif
 
@@ -676,32 +660,6 @@ while (0)
 #define YYERRCODE       256
 
 
-/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
-   If N is 0, then set CURRENT to the empty location which ends
-   the previous symbol: RHS[0] (always defined).  */
-
-#ifndef YYLLOC_DEFAULT
-# define YYLLOC_DEFAULT(Current, Rhs, N)                                \
-    do                                                                  \
-      if (N)                                                            \
-        {                                                               \
-          (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;        \
-          (Current).first_column = YYRHSLOC (Rhs, 1).first_column;      \
-          (Current).last_line    = YYRHSLOC (Rhs, N).last_line;         \
-          (Current).last_column  = YYRHSLOC (Rhs, N).last_column;       \
-        }                                                               \
-      else                                                              \
-        {                                                               \
-          (Current).first_line   = (Current).last_line   =              \
-            YYRHSLOC (Rhs, 0).last_line;                                \
-          (Current).first_column = (Current).last_column =              \
-            YYRHSLOC (Rhs, 0).last_column;                              \
-        }                                                               \
-    while (0)
-#endif
-
-#define YYRHSLOC(Rhs, K) ((Rhs)[K])
-
 
 /* Enable debugging if requested.  */
 #if YYDEBUG
@@ -717,48 +675,9 @@ do {                                            \
     YYFPRINTF Args;                             \
 } while (0)
 
-
-/* YY_LOCATION_PRINT -- Print the location on the stream.
-   This macro was not mandated originally: define only if we know
-   we won't break user code: when these are the locations we know.  */
-
+/* This macro is provided for backward compatibility. */
 #ifndef YY_LOCATION_PRINT
-# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
-
-/* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
-
-YY_ATTRIBUTE_UNUSED
-static unsigned
-yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
-{
-  unsigned res = 0;
-  int end_col = 0 != yylocp->last_column ? yylocp->last_column - 1 : 0;
-  if (0 <= yylocp->first_line)
-    {
-      res += YYFPRINTF (yyo, "%d", yylocp->first_line);
-      if (0 <= yylocp->first_column)
-        res += YYFPRINTF (yyo, ".%d", yylocp->first_column);
-    }
-  if (0 <= yylocp->last_line)
-    {
-      if (yylocp->first_line < yylocp->last_line)
-        {
-          res += YYFPRINTF (yyo, "-%d", yylocp->last_line);
-          if (0 <= end_col)
-            res += YYFPRINTF (yyo, ".%d", end_col);
-        }
-      else if (0 <= end_col && yylocp->first_column < end_col)
-        res += YYFPRINTF (yyo, "-%d", end_col);
-    }
-  return res;
- }
-
-#  define YY_LOCATION_PRINT(File, Loc)          \
-  yy_location_print_ (File, &(Loc))
-
-# else
-#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-# endif
+# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
 #endif
 
 
@@ -768,7 +687,7 @@ do {                                                                      \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Type, Value, Location); \
+                  Type, Value); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -779,11 +698,10 @@ do {                                                                      \
 `----------------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
-  YYUSE (yylocationp);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
@@ -799,14 +717,12 @@ yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvalue
 `--------------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
 {
   YYFPRINTF (yyoutput, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  YY_LOCATION_PRINT (yyoutput, *yylocationp);
-  YYFPRINTF (yyoutput, ": ");
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp);
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
   YYFPRINTF (yyoutput, ")");
 }
 
@@ -839,7 +755,7 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
 {
   unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -853,7 +769,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule
       yy_symbol_print (stderr,
                        yystos[yyssp[yyi + 1 - yynrhs]],
                        &(yyvsp[(yyi + 1) - (yynrhs)])
-                       , &(yylsp[(yyi + 1) - (yynrhs)])                       );
+                                              );
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -861,7 +777,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule
 # define YY_REDUCE_PRINT(Rule)          \
 do {                                    \
   if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, yylsp, Rule); \
+    yy_reduce_print (yyssp, yyvsp, Rule); \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -1119,10 +1035,9 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
 {
   YYUSE (yyvaluep);
-  YYUSE (yylocationp);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
@@ -1140,12 +1055,6 @@ int yychar;
 
 /* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval;
-/* Location data for the lookahead symbol.  */
-YYLTYPE yylloc
-# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
-  = { 1, 1, 1, 1 }
-# endif
-;
 /* Number of syntax errors so far.  */
 int yynerrs;
 
@@ -1164,7 +1073,6 @@ yyparse (void)
     /* The stacks and their tools:
        'yyss': related to states.
        'yyvs': related to semantic values.
-       'yyls': related to locations.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1179,14 +1087,6 @@ yyparse (void)
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
-    /* The location stack.  */
-    YYLTYPE yylsa[YYINITDEPTH];
-    YYLTYPE *yyls;
-    YYLTYPE *yylsp;
-
-    /* The locations where the error started and ended.  */
-    YYLTYPE yyerror_range[3];
-
     YYSIZE_T yystacksize;
 
   int yyn;
@@ -1196,7 +1096,6 @@ yyparse (void)
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
-  YYLTYPE yyloc;
 
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
@@ -1205,7 +1104,7 @@ yyparse (void)
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
+#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
@@ -1213,7 +1112,6 @@ yyparse (void)
 
   yyssp = yyss = yyssa;
   yyvsp = yyvs = yyvsa;
-  yylsp = yyls = yylsa;
   yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
@@ -1222,7 +1120,6 @@ yyparse (void)
   yyerrstatus = 0;
   yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
-  yylsp[0] = yylloc;
   goto yysetstate;
 
 /*------------------------------------------------------------.
@@ -1248,7 +1145,6 @@ yyparse (void)
            memory.  */
         YYSTYPE *yyvs1 = yyvs;
         yytype_int16 *yyss1 = yyss;
-        YYLTYPE *yyls1 = yyls;
 
         /* Each stack pointer address is followed by the size of the
            data in use in that stack, in bytes.  This used to be a
@@ -1257,10 +1153,8 @@ yyparse (void)
         yyoverflow (YY_("memory exhausted"),
                     &yyss1, yysize * sizeof (*yyssp),
                     &yyvs1, yysize * sizeof (*yyvsp),
-                    &yyls1, yysize * sizeof (*yylsp),
                     &yystacksize);
 
-        yyls = yyls1;
         yyss = yyss1;
         yyvs = yyvs1;
       }
@@ -1283,7 +1177,6 @@ yyparse (void)
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-        YYSTACK_RELOCATE (yyls_alloc, yyls);
 #  undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
@@ -1293,7 +1186,6 @@ yyparse (void)
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
-      yylsp = yyls + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
                   (unsigned long int) yystacksize));
@@ -1371,7 +1263,7 @@ yybackup:
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
-  *++yylsp = yylloc;
+
   goto yynewstate;
 
 
@@ -1402,116 +1294,153 @@ yyreduce:
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
 
-  /* Default location.  */
-  YYLLOC_DEFAULT (yyloc, (yylsp - yylen), yylen);
+
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
         case 2:
 #line 36 "minic.y" /* yacc.c:1646  */
-    { printf("program->FUNC ID(){declarations statement_list}\n"); 	imprimirListaVar(lVar); printf(".text\n.globl main:\n"); imprimirCodigo((yyvsp[-1].mips));}
-#line 1414 "minic.tab.c" /* yacc.c:1646  */
+    { 
+																					if(num_errores==0){
+																						printf(".data\n\n."); 
+																						imprimirListaStr(lStr);
+																						imprimirListaVar(lVar); 
+																						printf("\n.text\n.globl main\nmain:\n"); 
+																						imprimirCodigo((yyvsp[-2].mips));
+																						imprimirCodigo((yyvsp[-1].mips));
+																						printf("\tjr $ra\n"); 
+																					}
+																					else
+																						printf("Se han detectado errores. No se generará código\n");
+																				}
+#line 1317 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 39 "minic.y" /* yacc.c:1646  */
+#line 51 "minic.y" /* yacc.c:1646  */
     {tipo=1;}
-#line 1420 "minic.tab.c" /* yacc.c:1646  */
+#line 1323 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 39 "minic.y" /* yacc.c:1646  */
-    { printf("declarations->declarations VAR identifier_list ;\n");}
-#line 1426 "minic.tab.c" /* yacc.c:1646  */
+#line 51 "minic.y" /* yacc.c:1646  */
+    { 
+																		if(num_errores==0){
+																			ops tablaListas[2]={(yyvsp[-4].mips),(yyvsp[-1].mips)};
+																			concatenarListasOp(&(yyval.mips),tablaListas,2);						
+																		}	
+																	}
+#line 1334 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 40 "minic.y" /* yacc.c:1646  */
+#line 57 "minic.y" /* yacc.c:1646  */
     {tipo=0;}
-#line 1432 "minic.tab.c" /* yacc.c:1646  */
+#line 1340 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 40 "minic.y" /* yacc.c:1646  */
-    { printf("declarations->declarations LET identifier_list ;\n");}
-#line 1438 "minic.tab.c" /* yacc.c:1646  */
+#line 57 "minic.y" /* yacc.c:1646  */
+    { 
+																		if(num_errores==0){
+																			ops tablaListas[2]={(yyvsp[-4].mips),(yyvsp[-1].mips)};
+																			concatenarListasOp(&(yyval.mips),tablaListas,2);						
+																		}	
+																	}
+#line 1351 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 41 "minic.y" /* yacc.c:1646  */
-    { printf("declarations->lambda\n");}
-#line 1444 "minic.tab.c" /* yacc.c:1646  */
+#line 63 "minic.y" /* yacc.c:1646  */
+    { (yyval.mips).prim=NULL; (yyval.mips).ult=NULL; }
+#line 1357 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 42 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-3]).first_line,(yylsp[-3]).first_column,(yylsp[-3]).last_column,(yylsp[-3]).last_line); num_errores++;}
-#line 1450 "minic.tab.c" /* yacc.c:1646  */
+#line 64 "minic.y" /* yacc.c:1646  */
+    { /*printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);*/ num_errores++;}
+#line 1363 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 43 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-3]).first_line,(yylsp[-3]).first_column,(yylsp[-3]).last_column,(yylsp[-3]).last_line); num_errores++;}
-#line 1456 "minic.tab.c" /* yacc.c:1646  */
+#line 65 "minic.y" /* yacc.c:1646  */
+    { num_errores++;}
+#line 1369 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 46 "minic.y" /* yacc.c:1646  */
-    { printf("identifier_list->asig\n");}
-#line 1462 "minic.tab.c" /* yacc.c:1646  */
+#line 68 "minic.y" /* yacc.c:1646  */
+    { (yyval.mips)=(yyvsp[0].mips);}
+#line 1375 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 47 "minic.y" /* yacc.c:1646  */
-    {printf("identifier_list->identifier_list , asig\n");}
-#line 1468 "minic.tab.c" /* yacc.c:1646  */
+#line 69 "minic.y" /* yacc.c:1646  */
+    {
+												if(num_errores==0){
+													ops tablaListas[2]={(yyvsp[-2].mips),(yyvsp[0].mips)};
+													concatenarListasOp(&(yyval.mips),tablaListas,2);						
+												}	
+											}
+#line 1386 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 50 "minic.y" /* yacc.c:1646  */
-    { 	printf("asig->ID\n"); 
+#line 77 "minic.y" /* yacc.c:1646  */
+    {
 						if(consultarTipoVar(lVar,(yyvsp[0].str))!=-1){
 							snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[0].str));
 							yyerror(bufErr);			
 							num_errores++;
 						}			
-						else insertarVar(&lVar,(yyvsp[0].str),tipo);
+						else 
+							insertarVar(&lVar,(yyvsp[0].str),tipo);
+						if(num_errores==0){
+							(yyval.mips).prim=NULL; (yyval.mips).ult=NULL;
+						}
 					}
-#line 1481 "minic.tab.c" /* yacc.c:1646  */
+#line 1403 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 58 "minic.y" /* yacc.c:1646  */
-    { 	printf("asig->ID = expression\n");				//Bloque de código 
+#line 89 "minic.y" /* yacc.c:1646  */
+    {			
 										if(consultarTipoVar(lVar,(yyvsp[-2].str))!=-1){
 											snprintf(bufErr,128,"La variable %s ya ha sido declarada",(yyvsp[-2].str));
 											yyerror(bufErr);	
 											num_errores++;		
 										}						
-										else insertarVar(&lVar,(yyvsp[-2].str),tipo);
+										else 
+											insertarVar(&lVar,(yyvsp[-2].str),tipo);
+										if(num_errores==0){
+											(yyval.mips).prim=(yyvsp[0].mips).prim; 
+											(yyvsp[0].mips).ult->sig=crearOp("sw",(yyvsp[0].mips).ult->res,concatStr("_",(yyvsp[-2].str)),NULL);	
+											(yyval.mips).ult=(yyvsp[0].mips).ult->sig;
+											liberarReg((yyvsp[0].mips).ult->res);
+										}
 									}
-#line 1494 "minic.tab.c" /* yacc.c:1646  */
+#line 1423 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 68 "minic.y" /* yacc.c:1646  */
+#line 106 "minic.y" /* yacc.c:1646  */
     { 
 												if(num_errores==0){
 													ops tablaListas[2]={(yyvsp[-1].mips),(yyvsp[0].mips)};
 													concatenarListasOp(&(yyval.mips),tablaListas,2);	
 												}
 											}
-#line 1505 "minic.tab.c" /* yacc.c:1646  */
+#line 1434 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 74 "minic.y" /* yacc.c:1646  */
+#line 112 "minic.y" /* yacc.c:1646  */
     { (yyval.mips).prim=NULL; (yyval.mips).ult=NULL;}
-#line 1511 "minic.tab.c" /* yacc.c:1646  */
+#line 1440 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 77 "minic.y" /* yacc.c:1646  */
+#line 115 "minic.y" /* yacc.c:1646  */
     { 
 												if(consultarTipoVar(lVar,(yyvsp[-3].str))==-1){
 													snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[-3].str));
@@ -1530,27 +1459,27 @@ yyreduce:
 													liberarReg((yyvsp[-1].mips).ult->res);
 												}	
 											}
-#line 1534 "minic.tab.c" /* yacc.c:1646  */
+#line 1463 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 95 "minic.y" /* yacc.c:1646  */
+#line 133 "minic.y" /* yacc.c:1646  */
     { (yyval.mips)=(yyvsp[-1].mips);}
-#line 1540 "minic.tab.c" /* yacc.c:1646  */
+#line 1469 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 96 "minic.y" /* yacc.c:1646  */
+#line 134 "minic.y" /* yacc.c:1646  */
     { 
 						 												if(num_errores==0){
-																			char* etiquetaIf=nuevaEtiqueta();
 																			char* etiquetaElse=nuevaEtiqueta();
+																			char* etiquetaIf=nuevaEtiqueta();
 																			ops aux1;
 																			aux1.prim=crearOp("beqz",(yyvsp[-4].mips).ult->res,etiquetaElse,NULL);
 																			aux1.ult=aux1.prim;
 																			ops aux2;
 																			aux2.prim=crearOp("b",etiquetaIf,NULL,NULL);
-																			aux2.ult=crearOp("etiq",(yyvsp[-2].mips).ult->res,etiquetaElse,NULL);
+																			aux2.ult=crearOp("etiq",etiquetaElse,NULL,NULL);
 																			aux2.prim->sig=aux2.ult;
 																			ops aux3;
 																			aux3.prim=crearOp("etiq",etiquetaIf,NULL,NULL);
@@ -1560,11 +1489,11 @@ yyreduce:
 																			liberarReg((yyvsp[-4].mips).ult->res);
 																		}
 																	}
-#line 1564 "minic.tab.c" /* yacc.c:1646  */
+#line 1493 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 115 "minic.y" /* yacc.c:1646  */
+#line 153 "minic.y" /* yacc.c:1646  */
     {
 		 												if(num_errores==0){
 															char* etiqueta=nuevaEtiqueta();
@@ -1579,11 +1508,11 @@ yyreduce:
 															liberarReg((yyvsp[-2].mips).ult->res);
 														}
 													}
-#line 1583 "minic.tab.c" /* yacc.c:1646  */
+#line 1512 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 130 "minic.y" /* yacc.c:1646  */
+#line 168 "minic.y" /* yacc.c:1646  */
     { 
 			 												if(num_errores==0){
 																char* etiquetaInicio=nuevaEtiqueta();
@@ -1603,11 +1532,11 @@ yyreduce:
 																liberarReg((yyvsp[-2].mips).ult->res);
 															}
 														}
-#line 1607 "minic.tab.c" /* yacc.c:1646  */
+#line 1536 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 149 "minic.y" /* yacc.c:1646  */
+#line 187 "minic.y" /* yacc.c:1646  */
     {
 			 												if(num_errores==0){
 																char* etiqueta=nuevaEtiqueta();
@@ -1622,80 +1551,82 @@ yyreduce:
 																liberarReg((yyvsp[-1].mips).ult->res);
 															}
 														}
-#line 1626 "minic.tab.c" /* yacc.c:1646  */
+#line 1555 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 163 "minic.y" /* yacc.c:1646  */
+#line 201 "minic.y" /* yacc.c:1646  */
     { if(num_errores==0) (yyval.mips)=(yyvsp[-1].mips);}
-#line 1632 "minic.tab.c" /* yacc.c:1646  */
+#line 1561 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 164 "minic.y" /* yacc.c:1646  */
-    { printf("statement->READ read_list ;\n");}
-#line 1638 "minic.tab.c" /* yacc.c:1646  */
+#line 202 "minic.y" /* yacc.c:1646  */
+    { if(num_errores==0) (yyval.mips)=(yyvsp[-1].mips);}
+#line 1567 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 165 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line); num_errores++;}
-#line 1644 "minic.tab.c" /* yacc.c:1646  */
+#line 203 "minic.y" /* yacc.c:1646  */
+    { num_errores++;}
+#line 1573 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 166 "minic.y" /* yacc.c:1646  */
-    { printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", (yylsp[-1]).first_line,(yylsp[-1]).first_column,(yylsp[-1]).last_column,(yylsp[-1]).last_line); num_errores++;}
-#line 1650 "minic.tab.c" /* yacc.c:1646  */
+#line 204 "minic.y" /* yacc.c:1646  */
+    { num_errores++;}
+#line 1579 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 169 "minic.y" /* yacc.c:1646  */
+#line 207 "minic.y" /* yacc.c:1646  */
     { if(num_errores==0) (yyval.mips)=(yyvsp[0].mips); }
-#line 1656 "minic.tab.c" /* yacc.c:1646  */
+#line 1585 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 170 "minic.y" /* yacc.c:1646  */
+#line 208 "minic.y" /* yacc.c:1646  */
     {
 												if(num_errores==0){
 													ops tablaListas[2]={(yyvsp[-2].mips),(yyvsp[0].mips)};
 													concatenarListasOp(&(yyval.mips),tablaListas,2);						
 												}	
 											}
-#line 1667 "minic.tab.c" /* yacc.c:1646  */
+#line 1596 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 178 "minic.y" /* yacc.c:1646  */
+#line 216 "minic.y" /* yacc.c:1646  */
     {
-								if(num_errores==0 && (yyvsp[0].mips).prim!=NULL){
+								if(num_errores==0){
 									(yyval.mips).prim=(yyvsp[0].mips).prim;
-									(yyvsp[0].mips).ult->sig=crearOp("mv","a0",(yyval.mips).ult->res,NULL);
-									(yyvsp[0].mips).ult->sig->sig=crearOp("li","v0","1",NULL);
+									(yyvsp[0].mips).ult->sig=crearOp("move","$a0",(yyval.mips).ult->res,NULL);
+									(yyvsp[0].mips).ult->sig->sig=crearOp("li","$v0","1",NULL);
 									(yyvsp[0].mips).ult->sig->sig->sig=crearOp("syscall",NULL,NULL,NULL);
 									(yyval.mips).ult=(yyvsp[0].mips).ult->sig->sig->sig;
+									liberarReg((yyvsp[0].mips).ult->res);
 								}
 							}
-#line 1681 "minic.tab.c" /* yacc.c:1646  */
+#line 1611 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 187 "minic.y" /* yacc.c:1646  */
-    { 	if(num_errores==0){
+#line 226 "minic.y" /* yacc.c:1646  */
+    { 	
+							if(num_errores==0){
 								char * etiqueta=insertarStr(&lStr,(yyvsp[0].str));
-								(yyval.mips).prim=crearOp("la","a0",etiqueta,NULL);
-								(yyval.mips).prim->sig=crearOp("li","v0","4",NULL);
+								(yyval.mips).prim=crearOp("la","$a0",etiqueta,NULL);
+								(yyval.mips).prim->sig=crearOp("li","$v0","4",NULL);
 								(yyval.mips).prim->sig->sig=crearOp("syscall",NULL,NULL,NULL);
 								(yyval.mips).ult=(yyval.mips).prim->sig->sig;
 							}
 						}
-#line 1694 "minic.tab.c" /* yacc.c:1646  */
+#line 1625 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 197 "minic.y" /* yacc.c:1646  */
-    { 	printf("read_list->ID\n");
+#line 237 "minic.y" /* yacc.c:1646  */
+    { 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));			//Llamada al sistema 5
 							yyerror(bufErr);	
@@ -1705,13 +1636,20 @@ yyreduce:
 							snprintf(bufErr,128,"La variable %s se declaró como constante",(yyvsp[0].str));
 							yyerror(bufErr);	
 							num_errores++;		
-						}				
+						}	
+						if(num_errores==0){
+								(yyval.mips).prim=crearOp("li","$v0","5",NULL);
+								(yyval.mips).prim->sig=crearOp("syscall",NULL,NULL,NULL);
+								(yyval.mips).prim->sig->sig=crearOp("sw","$v0",concatStr("_",(yyvsp[0].str)),NULL);
+								(yyval.mips).ult=(yyval.mips).prim->sig->sig;
+							}
+									
 					}
-#line 1711 "minic.tab.c" /* yacc.c:1646  */
+#line 1649 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 209 "minic.y" /* yacc.c:1646  */
+#line 256 "minic.y" /* yacc.c:1646  */
     {	printf("read_list->read_list , ID\n");
 										if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 											snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));
@@ -1722,13 +1660,23 @@ yyreduce:
 											snprintf(bufErr,128,"La variable %s se declaró como constante",(yyvsp[0].str));
 											yyerror(bufErr);	
 											num_errores++;		
-										}					
+										}
+										if(num_errores==0){
+													ops aux;
+													aux.prim=crearOp("li","$v0","5",NULL);
+													aux.prim->sig=crearOp("syscall",NULL,NULL,NULL);
+													aux.prim->sig->sig=crearOp("sw","$v0",concatStr("_",(yyvsp[0].str)),NULL);
+													aux.ult=aux.prim->sig->sig;
+													ops tablaListas[2]={(yyvsp[-2].mips),aux};
+													concatenarListasOp(&(yyval.mips),tablaListas,2);						
+												}		
+														
 									}
-#line 1728 "minic.tab.c" /* yacc.c:1646  */
+#line 1676 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 223 "minic.y" /* yacc.c:1646  */
+#line 280 "minic.y" /* yacc.c:1646  */
     { 
 												if(num_errores==0){
 													(yyval.mips).prim=(yyvsp[-2].mips).prim;
@@ -1739,11 +1687,11 @@ yyreduce:
 													liberarReg((yyvsp[0].mips).ult->res);
 												}
 											}
-#line 1743 "minic.tab.c" /* yacc.c:1646  */
+#line 1691 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 233 "minic.y" /* yacc.c:1646  */
+#line 290 "minic.y" /* yacc.c:1646  */
     {
 												if(num_errores==0){
 													(yyval.mips).prim=(yyvsp[-2].mips).prim;
@@ -1754,11 +1702,11 @@ yyreduce:
 													liberarReg((yyvsp[0].mips).ult->res);
 												}
 											}
-#line 1758 "minic.tab.c" /* yacc.c:1646  */
+#line 1706 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 243 "minic.y" /* yacc.c:1646  */
+#line 300 "minic.y" /* yacc.c:1646  */
     { 
 												if(num_errores==0){
 													(yyval.mips).prim=(yyvsp[-2].mips).prim;
@@ -1769,11 +1717,11 @@ yyreduce:
 													liberarReg((yyvsp[0].mips).ult->res);
 												}
 											}
-#line 1773 "minic.tab.c" /* yacc.c:1646  */
+#line 1721 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 253 "minic.y" /* yacc.c:1646  */
+#line 310 "minic.y" /* yacc.c:1646  */
     { 
 													if(num_errores==0){
 														(yyval.mips).prim=(yyvsp[-2].mips).prim;
@@ -1784,11 +1732,11 @@ yyreduce:
 														liberarReg((yyvsp[0].mips).ult->res);
 													}
 												}
-#line 1788 "minic.tab.c" /* yacc.c:1646  */
+#line 1736 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 263 "minic.y" /* yacc.c:1646  */
+#line 320 "minic.y" /* yacc.c:1646  */
     { 
 													if(num_errores==0){
 														(yyval.mips).prim=(yyvsp[0].mips).prim;
@@ -1797,17 +1745,17 @@ yyreduce:
 														liberarReg((yyvsp[0].mips).ult->res);
 													}
 												}
-#line 1801 "minic.tab.c" /* yacc.c:1646  */
+#line 1749 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 271 "minic.y" /* yacc.c:1646  */
+#line 328 "minic.y" /* yacc.c:1646  */
     { (yyval.mips)=(yyvsp[-1].mips); }
-#line 1807 "minic.tab.c" /* yacc.c:1646  */
+#line 1755 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 272 "minic.y" /* yacc.c:1646  */
+#line 329 "minic.y" /* yacc.c:1646  */
     { 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
 							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str)); 
@@ -1819,22 +1767,22 @@ yyreduce:
 							(yyval.mips).ult=(yyval.mips).prim; 
 						}
 					}
-#line 1823 "minic.tab.c" /* yacc.c:1646  */
+#line 1771 "minic.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 283 "minic.y" /* yacc.c:1646  */
+#line 340 "minic.y" /* yacc.c:1646  */
     { 
 						if(num_errores==0){
 							(yyval.mips).prim=crearOp("li",obtenerReg(),(yyvsp[0].str),NULL); 
 							(yyval.mips).ult=(yyval.mips).prim; 
 						}
 					}
-#line 1834 "minic.tab.c" /* yacc.c:1646  */
+#line 1782 "minic.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1838 "minic.tab.c" /* yacc.c:1646  */
+#line 1786 "minic.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1855,7 +1803,6 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
-  *++yylsp = yyloc;
 
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -1920,7 +1867,7 @@ yyerrlab:
 #endif
     }
 
-  yyerror_range[1] = yylloc;
+
 
   if (yyerrstatus == 3)
     {
@@ -1936,7 +1883,7 @@ yyerrlab:
       else
         {
           yydestruct ("Error: discarding",
-                      yytoken, &yylval, &yylloc);
+                      yytoken, &yylval);
           yychar = YYEMPTY;
         }
     }
@@ -1957,7 +1904,6 @@ yyerrorlab:
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
 
-  yyerror_range[1] = yylsp[1-yylen];
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
   YYPOPSTACK (yylen);
@@ -1991,9 +1937,9 @@ yyerrlab1:
       if (yyssp == yyss)
         YYABORT;
 
-      yyerror_range[1] = *yylsp;
+
       yydestruct ("Error: popping",
-                  yystos[yystate], yyvsp, yylsp);
+                  yystos[yystate], yyvsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -2003,11 +1949,6 @@ yyerrlab1:
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
-  yyerror_range[2] = yylloc;
-  /* Using YYLLOC is tempting, but would change the location of
-     the lookahead.  YYLOC is available though.  */
-  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
-  *++yylsp = yyloc;
 
   /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
@@ -2047,7 +1988,7 @@ yyreturn:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval, &yylloc);
+                  yytoken, &yylval);
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
@@ -2056,7 +1997,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[*yyssp], yyvsp, yylsp);
+                  yystos[*yyssp], yyvsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2069,7 +2010,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 290 "minic.y" /* yacc.c:1906  */
+#line 347 "minic.y" /* yacc.c:1906  */
 
 /* Rutinas C */
 int yyerror(const char * msg){

@@ -1,13 +1,12 @@
 func prueba () {
-let a=0, b=0;
-var c=5+2-2;
-print "Inicio del programa\n";
-if (a) print "a","\n";
-else if (b) print "No a y b\n";
-else while (c)
-{
-print "c = ",c,"\n";
-c = c-2+1;
-}
-print "Final","\n";
+	let a=0, b=093393999002302333113;
+	var c=5+2-2;
+	 do
+		{
+		print "c = ",c,"\n";
+		a=2;
+		c=A*2;
+		c;
+		c = c-2+1;
+		}while(c)
 }
