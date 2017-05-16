@@ -10,7 +10,7 @@ añadir a gcc -g. gdb ./analizador, run prueba.txt, back
 
 
 Quitar todos los print(menos errores).
-Falta una lista de strings 
+
 
 proletool uclm esi:   http://portal.esi.uclm.es/proletool/compile.py
 

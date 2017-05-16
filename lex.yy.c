@@ -851,201 +851,181 @@ case 1:
 YY_RULE_SETUP
 #line 16 "minic.l"
 {
-		//printf("FUNC\n");
 		return FUNC;
 	}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "minic.l"
+#line 20 "minic.l"
 {
-			//printf("VAR\n");
 			return VAR;
 	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "minic.l"
+#line 24 "minic.l"
 {
-			//printf("LET\n");
 			return LET;
 	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "minic.l"
+#line 28 "minic.l"
 {
-			//printf("IF\n");
 			return IF;
 	}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 36 "minic.l"
+#line 32 "minic.l"
 {
-			//printf("ELSE\n");
 			return ELSE;
 	}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 41 "minic.l"
+#line 36 "minic.l"
 {
-			//printf("WHILE\n");
 			return WHILE;
 		}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 46 "minic.l"
+#line 40 "minic.l"
 {
-			//printf("PRINT\n");
 			return PRINT;		
 	}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 51 "minic.l"
+#line 44 "minic.l"
 {
-			//printf("READ\n");
 			return READ;		
 	}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 55 "minic.l"
-{	return DO;
+#line 47 "minic.l"
+{	
+			return DO;
 	}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 57 "minic.l"
+#line 50 "minic.l"
 {
-			//printf("PTOCOMA\n");
 			return PTOCOMA;		
 	}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 62 "minic.l"
+#line 54 "minic.l"
 {
-			//printf("MAS\n");
 			return MAS;		
 	}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 67 "minic.l"
+#line 58 "minic.l"
 {
-			//printf("MENOS\n");
 			return MENOS;		
 	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 72 "minic.l"
+#line 62 "minic.l"
 {
-			//printf("POR\n");
 			return POR;		
 	}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 77 "minic.l"
+#line 66 "minic.l"
 {
-			//printf("ENTRE\n");
 			return ENTRE;		
 	}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 82 "minic.l"
+#line 70 "minic.l"
 {
-			//printf("IGUAL\n");
 			return IGUAL;		
 	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 87 "minic.l"
+#line 74 "minic.l"
 {
-			//printf("COMA\n");
 			return COMA;		
 	}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 92 "minic.l"
+#line 78 "minic.l"
 {
-			//printf("CPAR\n");
 			return CPAR;		
 	}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 96 "minic.l"
+#line 81 "minic.l"
 {
-			//printf("APAR\n");
 			return APAR;		
 	}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 101 "minic.l"
+#line 85 "minic.l"
 {
-			//printf("ALLAVE\n");
 			return ALLAVE;		
 	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 106 "minic.l"
+#line 89 "minic.l"
 {
-			//printf("CLLAVE\n");
 			return CLLAVE;		
 	}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 111 "minic.l"
+#line 93 "minic.l"
 {
 						if(yyleng>16){
 							printf("*** Error léxico (linea %d): identificador demasiado largo. %s ***\n",yylineno,yytext);
 							nErrores++;
 						}else			
-							//printf("ID: %s\n", yytext);
-						yylval.str=strdup(yytext);
+							yylval.str=strdup(yytext);
 						return ID;
 					}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 121 "minic.l"
+#line 102 "minic.l"
 {
 			long entero=atol(yytext);
 			if(entero>pow(2,31)){
 				printf("*** Error léxico (linea %d): constante demasiado grande. %s ***\n",yylineno,yytext);
 				nErrores++;
 			}else
-				//printf("ENT: %s\n", yytext);
-			yylval.str=strdup(yytext);
+				yylval.str=strdup(yytext);
 			return ENT;
 		}
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 132 "minic.l"
+#line 112 "minic.l"
 { /* Ignoramos */ }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 134 "minic.l"
+#line 114 "minic.l"
 { /* Ignoramos */ } 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 136 "minic.l"
+#line 116 "minic.l"
 { comienzo_comentario=yylineno; BEGIN(comentario); yymore();}
 	YY_BREAK
 case 26:
@@ -1053,7 +1033,7 @@ case 26:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 139 "minic.l"
+#line 119 "minic.l"
 {
 					printf("*** Error léxico (linea %d):COMILLAS SIN CERRAR: %s ***\n",yylineno,yytext);						
 					return CADENA;
@@ -1061,16 +1041,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 144 "minic.l"
+#line 124 "minic.l"
 { 	
-					//printf("CADENA ENTRECOMILLADA: %s\n",yytext);		
 					yylval.str=strdup(yytext);				
 					return CADENA;	
 				}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 150 "minic.l"
+#line 129 "minic.l"
 {
 			printf("*** Error léxico (linea %d): %s ***\n",yylineno,yytext);
 			nErrores++;
@@ -1080,24 +1059,24 @@ YY_RULE_SETUP
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 156 "minic.l"
+#line 135 "minic.l"
 { yymore(); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 157 "minic.l"
-{ /*printf("COMENTARIO:\n%s\n", yytext);*/BEGIN(INITIAL); }
+#line 136 "minic.l"
+{ BEGIN(INITIAL); }
 	YY_BREAK
 case YY_STATE_EOF(comentario):
-#line 158 "minic.l"
+#line 137 "minic.l"
 { printf("*** COMENTARIO SIN CERRAR (abierto en la linea %d) ***\n",comienzo_comentario); return 0; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 183 "minic.l"
+#line 162 "minic.l"
 ECHO;
 	YY_BREAK
-#line 1101 "lex.yy.c"
+#line 1080 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2110,4 +2089,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 183 "minic.l"
+#line 162 "minic.l"

@@ -1358,7 +1358,7 @@ yyreduce:
 
   case 8:
 #line 64 "minic.y" /* yacc.c:1646  */
-    { /*printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);*/ num_errores++;}
+    { num_errores++;}
 #line 1363 "minic.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1628,7 +1628,7 @@ yyreduce:
 #line 237 "minic.y" /* yacc.c:1646  */
     { 
 						if(consultarTipoVar(lVar,(yyvsp[0].str))==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));			//Llamada al sistema 5
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",(yyvsp[0].str));			
 							yyerror(bufErr);	
 							num_errores++;		
 						}	

@@ -1,4 +1,5 @@
 func prueba () {
+?ASADDAS?D?SDA? asd;
 	let a=0, b=093393999002302333113;
 	var c=5+2-2;
 	 do

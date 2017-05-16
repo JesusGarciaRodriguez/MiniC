@@ -1,3 +1,8 @@
+Estado 56 conflictos: 4 desplazamiento/reducción
+Estado 74 conflictos: 4 desplazamiento/reducción
+Estado 75 conflictos: 4 desplazamiento/reducción
+Estado 76 conflictos: 4 desplazamiento/reducción
+Estado 77 conflictos: 4 desplazamiento/reducción
 Estado 81 conflictos: 1 desplazamiento/reducción
 
 
@@ -672,6 +677,15 @@ Estado 56
    34           | expression . ENTRE expression
    35           | MENOS expression .
 
+    MAS    desplazar e ir al estado 59
+    MENOS  desplazar e ir al estado 60
+    POR    desplazar e ir al estado 61
+    ENTRE  desplazar e ir al estado 62
+
+    MAS       [reduce usando la regla 35 (expression)]
+    MENOS     [reduce usando la regla 35 (expression)]
+    POR       [reduce usando la regla 35 (expression)]
+    ENTRE     [reduce usando la regla 35 (expression)]
     $default  reduce usando la regla 35 (expression)
 
 
@@ -865,9 +879,15 @@ Estado 74
    33           | expression . POR expression
    34           | expression . ENTRE expression
 
+    MAS    desplazar e ir al estado 59
+    MENOS  desplazar e ir al estado 60
     POR    desplazar e ir al estado 61
     ENTRE  desplazar e ir al estado 62
 
+    MAS       [reduce usando la regla 31 (expression)]
+    MENOS     [reduce usando la regla 31 (expression)]
+    POR       [reduce usando la regla 31 (expression)]
+    ENTRE     [reduce usando la regla 31 (expression)]
     $default  reduce usando la regla 31 (expression)
 
 
@@ -879,9 +899,15 @@ Estado 75
    33           | expression . POR expression
    34           | expression . ENTRE expression
 
+    MAS    desplazar e ir al estado 59
+    MENOS  desplazar e ir al estado 60
     POR    desplazar e ir al estado 61
     ENTRE  desplazar e ir al estado 62
 
+    MAS       [reduce usando la regla 32 (expression)]
+    MENOS     [reduce usando la regla 32 (expression)]
+    POR       [reduce usando la regla 32 (expression)]
+    ENTRE     [reduce usando la regla 32 (expression)]
     $default  reduce usando la regla 32 (expression)
 
 
@@ -893,6 +919,15 @@ Estado 76
    33           | expression POR expression .
    34           | expression . ENTRE expression
 
+    MAS    desplazar e ir al estado 59
+    MENOS  desplazar e ir al estado 60
+    POR    desplazar e ir al estado 61
+    ENTRE  desplazar e ir al estado 62
+
+    MAS       [reduce usando la regla 33 (expression)]
+    MENOS     [reduce usando la regla 33 (expression)]
+    POR       [reduce usando la regla 33 (expression)]
+    ENTRE     [reduce usando la regla 33 (expression)]
     $default  reduce usando la regla 33 (expression)
 
 
@@ -904,6 +939,15 @@ Estado 77
    34           | expression . ENTRE expression
    34           | expression ENTRE expression .
 
+    MAS    desplazar e ir al estado 59
+    MENOS  desplazar e ir al estado 60
+    POR    desplazar e ir al estado 61
+    ENTRE  desplazar e ir al estado 62
+
+    MAS       [reduce usando la regla 34 (expression)]
+    MENOS     [reduce usando la regla 34 (expression)]
+    POR       [reduce usando la regla 34 (expression)]
+    ENTRE     [reduce usando la regla 34 (expression)]
     $default  reduce usando la regla 34 (expression)
 
 

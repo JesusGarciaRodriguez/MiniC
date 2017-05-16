@@ -26,10 +26,11 @@ int num_errores=0;
 %token<str> ID ENT CADENA
 %type<mips> expression statement statement_list print_list print_item read_list asig identifier_list declarations
 
-// Precedencia y asociatividad
-%left MAS MENOS //MAS mENOS igual precendencia, asoc por la izquierda
-%left POR ENTRE	//MULT DIV MÄS PRECEDENCIA QUE TODO LO DE ARRIBA Y MISMA ENTRE ELLOS Y ASOC IZQ
+%left MAS MENOS 
+%left POR ENTRE	
 %nonassoc UMENOS
+
+%expect 1 
 
 %%
 
@@ -61,7 +62,7 @@ declarations:	declarations VAR {tipo=1;} identifier_list PTOCOMA 	{
 																		}	
 																	} 
 			|	/*Lambda*/ { $$.prim=NULL; $$.ult=NULL; }
-			| 	declarations VAR error PTOCOMA { /*printf("Error detectado al analizar la entrada en: %d: %d-%d: %d\n", @1.first_line,@1.first_column,@1.last_column,@1.last_line);*/ num_errores++;}
+			| 	declarations VAR error PTOCOMA { num_errores++;}
 			| 	declarations LET error PTOCOMA { num_errores++;}
 			;
 
@@ -236,7 +237,7 @@ print_item:		expression 	{
 
 read_list:		ID { 
 						if(consultarTipoVar(lVar,$1)==-1){
-							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);			//Llamada al sistema 5
+							snprintf(bufErr,128,"La variable %s no ha sido declarada",$1);			
 							yyerror(bufErr);	
 							num_errores++;		
 						}	
