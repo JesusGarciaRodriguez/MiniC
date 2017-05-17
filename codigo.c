@@ -89,6 +89,7 @@ char * nuevaEtiqueta(){
 }
 
 void concatenarListasOp(ops* SS,  ops* listas, int length){
+	
 	for(int i=0; i<(length-1); i++){
 		if(listas[i].prim!=NULL){
 			int j=i+1;

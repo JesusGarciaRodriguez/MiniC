@@ -22,13 +22,16 @@ int num_errores=0;
 	ops mips; 
 }
 
-%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO
+%token FUNC VAR LET IF ELSE WHILE PRINT READ APAR CPAR PTOCOMA COMA MAS MENOS POR ENTRE IGUAL ALLAVE CLLAVE DO MENOR MAYOR NEG OR AND 
 %token<str> ID ENT CADENA
 %type<mips> expression statement statement_list print_list print_item read_list asig identifier_list declarations
 
+%left NEG //negacion minima precedencia
+%left IGUAL MENOR MAYOR
+%left AND OR
 %left MAS MENOS 
 %left POR ENTRE	
-%nonassoc UMENOS
+%nonassoc UMENOS 
 
 %expect 1 
 
@@ -312,7 +315,7 @@ expression:		expression MAS expression 	{
 													if(num_errores==0){
 														$$.prim=$1.prim;
 														$1.ult->sig=$3.prim;
-														$3.ult->sig=crearOp("sub",obtenerReg(),$1.ult->res,$3.ult->res);
+														$3.ult->sig=crearOp("div",obtenerReg(),$1.ult->res,$3.ult->res);
 														$$.ult=$3.ult->sig;
 														liberarReg($1.ult->res);
 														liberarReg($3.ult->res);
@@ -326,6 +329,96 @@ expression:		expression MAS expression 	{
 														liberarReg($2.ult->res);
 													}
 												}
+			|	NEG expression	{ 
+													if(num_errores==0){
+														$$.prim=$2.prim;
+														$2.ult->sig=crearOp("not",obtenerReg(),$2.ult->res,NULL);
+														$$.ult=$2.ult->sig;
+														liberarReg($2.ult->res);
+													}
+												}
+			|	expression MENOR expression 	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$3.prim;
+														$3.ult->sig=crearOp("slt",obtenerReg(),$1.ult->res,$3.ult->res);
+														$$.ult=$3.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($3.ult->res);
+													}
+												}
+			|	expression MAYOR expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$3.prim;
+														$3.ult->sig=crearOp("sgt",obtenerReg(),$1.ult->res,$3.ult->res);
+														$$.ult=$3.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($3.ult->res);
+													}
+												}
+			|	expression MENOR IGUAL expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$4.prim;
+														$4.ult->sig=crearOp("sle",obtenerReg(),$1.ult->res,$4.ult->res);
+														$$.ult=$4.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($4.ult->res);
+													}
+												}
+			|	expression MAYOR IGUAL expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$4.prim;
+														$4.ult->sig=crearOp("sge",obtenerReg(),$1.ult->res,$4.ult->res);
+														$$.ult=$4.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($4.ult->res);
+														}
+													}
+			|	expression IGUAL IGUAL expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$4.prim;
+														$4.ult->sig=crearOp("seq",obtenerReg(),$1.ult->res,$4.ult->res);
+														$$.ult=$4.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($4.ult->res);
+														}
+													}
+			|	expression NEG IGUAL expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$4.prim;
+														$4.ult->sig=crearOp("sne",obtenerReg(),$1.ult->res,$4.ult->res);
+														$$.ult=$4.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($4.ult->res);
+													}
+												}
+			|	expression AND expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$3.prim;
+														$3.ult->sig=crearOp("and",obtenerReg(),$1.ult->res,$3.ult->res);
+														$$.ult=$3.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($3.ult->res);
+													}
+												}
+
+			|	expression OR expression	{ 
+													if(num_errores==0){
+														$$.prim=$1.prim;
+														$1.ult->sig=$3.prim;
+														$3.ult->sig=crearOp("or",obtenerReg(),$1.ult->res,$3.ult->res);
+														$$.ult=$3.ult->sig;														
+														liberarReg($1.ult->res);
+														liberarReg($3.ult->res);
+													}
+												}
+	
 			|	APAR expression CPAR { $$=$2; }
 			|	ID	{ 
 						if(consultarTipoVar(lVar,$1)==-1){

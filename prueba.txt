@@ -1,13 +1,8 @@
 func prueba () {
-?ASADDAS?D?SDA? asd;
-	let a=0, b=093393999002302333113;
+	let a=0, b=02333113;
 	var c=5+2-2;
 	 do
 		{
-		print "c = ",c,"\n";
-		a=2;
-		c=A*2;
-		c;
 		c = c-2+1;
-		}while(c)
+		}while(c+2!=2||2)
 }

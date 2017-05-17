@@ -90,6 +90,27 @@ do	{
 			return CLLAVE;		
 	}
 
+"<"	{
+			return MENOR;		
+	}
+
+">"	{
+			return MAYOR;		
+	}
+
+"!"	{
+			return NEG;		
+	}
+
+"||"	{
+			return OR;		
+	}
+
+"&&"	{
+			return AND;		
+	}
+
+
 [a-zA-Z_][a-zA-Z_0-9]*	{
 						if(yyleng>16){
 							printf("*** Error léxico (linea %d): identificador demasiado largo. %s ***\n",yylineno,yytext);
