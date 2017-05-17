@@ -34,7 +34,7 @@ char * insertarStr(listaStr * l, char * cadena)
 
 void imprimirListaStr(listaStr l){
 	for(listaStr aux=l; aux!=NULL; aux=aux->sig){
-		printf("%s\n", aux->etiq);
+		printf("%s:\n", aux->etiq);
 		printf("\t.asciiz %s\n",aux->cadena);
 	} 
 }

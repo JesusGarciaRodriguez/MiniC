@@ -1342,7 +1342,7 @@ yyreduce:
 #line 40 "minic.y" /* yacc.c:1646  */
     { 
 																					if(num_errores==0){
-																						printf(".data\n\n."); 
+																						printf(".data\n\n"); 
 																						imprimirListaStr(lStr);
 																						imprimirListaVar(lVar); 
 																						printf("\n.text\n.globl main\nmain:\n"); 

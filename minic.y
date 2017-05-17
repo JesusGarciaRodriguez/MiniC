@@ -26,7 +26,7 @@ int num_errores=0;
 %token<str> ID ENT CADENA
 %type<mips> expression statement statement_list print_list print_item read_list asig identifier_list declarations
 
-%left NEG //negacion minima precedencia
+%left NEG 
 %left IGUAL MENOR MAYOR
 %left AND OR
 %left MAS MENOS 
@@ -39,7 +39,7 @@ int num_errores=0;
 
 program: 		FUNC ID APAR CPAR ALLAVE declarations statement_list CLLAVE 	{ 
 																					if(num_errores==0){
-																						printf(".data\n\n."); 
+																						printf(".data\n\n"); 
 																						imprimirListaStr(lStr);
 																						imprimirListaVar(lVar); 
 																						printf("\n.text\n.globl main\nmain:\n"); 

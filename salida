@@ -1,0 +1,41 @@
+.data
+
+$str4:
+	.asciiz "\n"
+$str3:
+	.asciiz "Final"
+$str2:
+	.asciiz "\n"
+$str1:
+	.asciiz "c="
+_c:
+	.word 0
+
+.text
+.globl main
+main:
+$l1:
+	li $v0, 5
+	syscall
+	sw $v0, _c
+	la $a0, $str1
+	li $v0, 4
+	syscall
+	lw $t0, _c
+	move $a0, $t0
+	li $v0, 1
+	syscall
+	la $a0, $str2
+	li $v0, 4
+	syscall
+	lw $t0, _c
+	li $t1, 0
+	sne $t2, $t0, $t1
+	bnez $t2, $l1
+	la $a0, $str3
+	li $v0, 4
+	syscall
+	la $a0, $str4
+	li $v0, 4
+	syscall
+	jr $ra

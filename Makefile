@@ -8,7 +8,7 @@ lex.yy.c: minic.l minic.tab.h
 			flex --yylineno minic.l
 
 run:	prueba.txt analizador
-		./analizador prueba.txt
+		./analizador prueba.txt 
 
 
 clean:

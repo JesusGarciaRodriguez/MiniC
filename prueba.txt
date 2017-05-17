@@ -1,8 +1,8 @@
 func prueba () {
-	let a=0, b=02333113;
-	var c=5+2-2;
-	 do
-		{
-		c = c-2+1;
-		}while(c+2!=2||2)
+	let a=0;
+	var c=1293219232192132133;
+	a=102*2;
+	??
+	read(c);
+	"asdasd
 }

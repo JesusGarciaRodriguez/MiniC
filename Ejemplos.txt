@@ -1,0 +1,105 @@
+func prueba () {
+	let a=0, b=0;
+	var c=5+2-2;
+	print "Inicio del programa\n";
+	if (a) print "a","\n";
+	else if (b) print "No a y b\n";
+	else while (c)
+	{
+		print "c = ",c,"\n";
+		c = c-2+1;
+	}
+	print "Final","\n";
+}
+
+Inicio del programa
+c = 5
+c = 4
+c = 3
+c = 2
+c = 1
+Final
+
+
+func prueba () {
+	let a=0, b=0;
+	var c=5;
+	print "Inicio del programa\n";
+	if (a && 1) print "Entra if","\n";
+	else if (b || 1) print "Entra else if\n";
+	while (c>1)
+	{
+		print "c = ",c,"\n";
+		c = c-1;
+	}
+	print "Final","\n";
+}
+
+Inicio del programa
+Entra else if
+c = 5
+c = 4
+c = 3
+c = 2
+Final
+
+func prueba () {
+	let a=0, b=0;
+	var c=5;
+	print "Inicio del programa\n";
+	if (!(a && 1)) print "Entra if","\n";
+	else if (b || 1) print "Entra else if\n";
+	while (c!=0)
+	{
+		print "c = ",c,"\n";
+		c = c-1;
+	}
+	print "Final","\n";
+}
+
+Inicio del programa
+Entra if
+c = 5
+c = 4
+c = 3
+c = 2
+c = 1
+Final
+
+
+
+
+func prueba () {
+	var c;
+	do{
+		read c;
+		print "c=", c, "\n";
+	}while(c!=0)
+	print "Final","\n";
+}
+c=1
+c=2
+c=1
+c=0
+Final
+
+
+
+func prueba () {
+	let a=0;
+	var c=1293219232192132133;
+	a=102*2;
+	??
+	read(c);
+	"asdasd
+}
+*** Error léxico (linea 3): constante demasiado grande. 1293219232192132133 ***
+La variable a se declaró como constante (linea 4)
+*** Error léxico (linea 5): ?? ***
+syntax error (linea 6)
+*** Error léxico (linea 7):COMILLAS SIN CERRAR: "asdasd ***
+
+
+
+
+

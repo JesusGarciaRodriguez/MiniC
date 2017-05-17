@@ -5,7 +5,7 @@
 #include <math.h>
 
 int comienzo_comentario;
-int nErrores;
+extern int num_errores;
 %}
 	
 %x comentario
@@ -114,7 +114,7 @@ do	{
 [a-zA-Z_][a-zA-Z_0-9]*	{
 						if(yyleng>16){
 							printf("*** Error léxico (linea %d): identificador demasiado largo. %s ***\n",yylineno,yytext);
-							nErrores++;
+							num_errores++;
 						}else			
 							yylval.str=strdup(yytext);
 						return ID;
@@ -124,7 +124,7 @@ do	{
 			long entero=atol(yytext);
 			if(entero>pow(2,31)){
 				printf("*** Error léxico (linea %d): constante demasiado grande. %s ***\n",yylineno,yytext);
-				nErrores++;
+				num_errores++;
 			}else
 				yylval.str=strdup(yytext);
 			return ENT;
@@ -134,7 +134,7 @@ do	{
 
 "//".* 		{ /* Ignoramos */ } 
 
-"/*"	{ comienzo_comentario=yylineno; BEGIN(comentario); yymore();}
+"/*"	{ BEGIN(comentario); comienzo_comentario=yylineno; yymore();}
 
 
 \"([^"\r\n]|\\\")*$	{
@@ -147,21 +147,16 @@ do	{
 					return CADENA;	
 				}
 
-[^a-zA-Z0-9,*_";+/=(){} \t\n\r-]+ 	{
-			printf("*** Error léxico (linea %d): %s ***\n",yylineno,yytext);
-			nErrores++;
-			return ID;
-	}
 
-<comentario>"/*"([^*]|[*]+[^*/])*[*]+"/" { yymore(); }
+<comentario>([^*]|[*]+[^*/])* { yymore(); }
 <comentario>[*]+"/"  { BEGIN(INITIAL); }
 <comentario><<EOF>> { printf("*** COMENTARIO SIN CERRAR (abierto en la linea %d) ***\n",comienzo_comentario); return 0; }
 
-
-
-
-
-
+[^a-zA-Z0-9,*_";+/=(){} \t\n\r-]+ 	{
+			printf("*** Error léxico (linea %d): %s ***\n",yylineno,yytext);
+			num_errores++;
+			return ID;
+	}
 
 
 
